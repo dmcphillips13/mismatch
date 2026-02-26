@@ -1,32 +1,12 @@
 {
   "name": "mismatch",
-  "version": "0.1.0",
   "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.28.1",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "@langchain/core": "^1.1.28",
-    "@qdrant/js-client-rest": "^1.17.0",
-    "csv-parse": "^6.1.0",
-    "dotenv": "^17.3.1",
-    "langchain": "^1.2.27",
-    "langsmith": "^0.5.6",
-    "next": "16.1.6",
-    "openai": "^6.25.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "zod": "^4.3.6"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.6",
-    "typescript": "^5"
+    "dev": "pnpm -C web dev",
+    "build": "pnpm -C web build",
+    "start": "pnpm -C web start",
+    "lint": "pnpm -C web lint"
   }
 }
