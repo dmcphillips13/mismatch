@@ -8,7 +8,6 @@ dependencies = [
   "pydantic",
   "pydantic-settings",
   "python-dotenv",
-  "httpx",
   "qdrant-client",
   "langchain",
   "langgraph",
@@ -16,8 +15,5 @@ dependencies = [
   "openai",
   "ragas",
   "langchain-openai",
-  "langchain-qdrant",
   "langchain-cohere",
-  "openevals",
-  "rapidfuzz>=3.14.3",
 ]
