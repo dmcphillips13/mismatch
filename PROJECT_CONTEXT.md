@@ -1,7 +1,7 @@
 # PROJECT_CONTEXT — Mismatch
 
 ## Current completed step
-- Step 7b complete (H2H matchup docs + rewritten eval questions)
+- Step 7 complete (H2H matchup docs + RAGAS synthetic testset + baseline eval)
 
 ## Current doc setup
 - Canonical spec: `AGENTS.md`
@@ -20,36 +20,34 @@
 - `services/agent/app/eval/rag_chain.py` — simple retrieve+generate chain for RAGAS eval (RAGResult dataclass)
 - `services/agent/scripts/build_docs.py` — CLI to run pipeline -> docs.jsonl
 - `services/agent/scripts/upsert_docs.py` — CLI to upsert docs.jsonl -> Qdrant
-- `services/agent/scripts/generate_testset.py` — synthetic + hand-crafted golden dataset generation (uploads to LangSmith)
+- `services/agent/scripts/generate_testset.py` — RAGAS TestsetGenerator with doc sampling, static personas, and retry logic (uploads to LangSmith)
 - `services/agent/scripts/eval_baseline.py` — RAGAS baseline eval (Faithfulness, ContextRecall, ContextEntityRecall, AnswerRelevancy, FactualCorrectness)
 - `services/agent/data/processed/docs.jsonl` — 2,251 docs (288 per-team + ~1,467 h2h_season + ~496 h2h_recent)
-- `services/agent/data/eval/testset.json` — 10 hand-crafted matchup-focused eval examples
+- `services/agent/data/eval/testset.json` — 11 synthetic eval examples (RAGAS TestsetGenerator)
 - `services/agent/data/eval/baseline_results.json` — baseline RAGAS scores
-- `services/agent/pyproject.toml` — all deps including ragas, rapidfuzz, langchain-openai, langchain-qdrant, langchain-cohere, openevals
+- `services/agent/pyproject.toml` — all deps including ragas, langchain-openai, langchain-cohere
 - `web/` — Next.js chat UI with /api/chat proxy
 - `data/raw/` — 3 NHL season CSVs
 
-## Step 7b baseline RAGAS results (with H2H docs)
+## Step 7 baseline RAGAS results
 ```json
 {
   "revision_id": "baseline",
   "retrieval": "dense_cosine_qdrant",
   "retrieval_limit": 6,
-  "num_examples": 10,
+  "num_examples": 11,
   "metrics": {
-    "faithfulness": 0.807,
-    "context_recall": 0.850,
-    "context_entity_recall": 0.217,
-    "answer_relevancy": 0.868
+    "faithfulness": 0.814,
+    "context_recall": 0.705,
+    "context_entity_recall": 0.438,
+    "answer_relevancy": 0.656
   }
 }
 ```
-- Golden dataset: 10 hand-crafted matchup-focused questions (H2H, cross-season, mixed, comparative)
+- Golden dataset: 11 synthetic examples via RAGAS TestsetGenerator (SingleHop 50%, MultiHopAbstract 25%, MultiHopSpecific 25%)
+- Synthetic generation uses stratified doc sampling (100 of 2,251 docs) and static personas to avoid RAGAS API calls
 - Doc corpus: 2,251 docs (288 per-team summaries + 1,467 h2h_season + 496 h2h_recent)
-- Key improvement vs Step 7: context_recall 0.50 → 0.85 (+70%), answer_relevancy 0.64 → 0.87 (+35%)
-- Faithfulness slightly down (0.87 → 0.81) — expected with harder matchup questions
-- Context entity recall dropped (0.41 → 0.22) — H2H docs use aggregated stats not raw entity lists
-- Next: Cohere rerank (Step 8) should further improve retrieval precision
+- Next: Cohere rerank (Step 8) should improve retrieval precision
 
 ## Dependency readiness
 - OpenAI: ready
