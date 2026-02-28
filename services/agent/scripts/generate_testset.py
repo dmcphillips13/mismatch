@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import json
+import random
 import sys
+import time
+from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -12,7 +15,9 @@ from langchain_core.documents import Document
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.llms import LangchainLLMWrapper
+from ragas.run_config import RunConfig
 from ragas.testset import TestsetGenerator
+from ragas.testset.persona import Persona
 from ragas.testset.synthesizers import (
     MultiHopAbstractQuerySynthesizer,
     MultiHopSpecificQuerySynthesizer,
@@ -22,6 +27,38 @@ from ragas.testset.synthesizers import (
 from app.settings import settings
 
 TESTSET_OUTPUT = Path("data/eval/testset.json")
+SAMPLED_DOC_COUNT = 100
+TARGET_DOC_TYPES = [
+    "team_season_summary",
+    "team_form_summary_last10",
+    "team_form_summary_last20",
+    "h2h_season",
+    "h2h_recent",
+]
+SYNTHETIC_GENERATION_RETRIES = 3
+RAGAS_RUN_CONFIG = RunConfig(
+    timeout=240,
+    max_retries=8,
+    max_wait=90,
+    max_workers=4,
+    seed=42,
+)
+
+# Static personas prevent RAGAS from making extra persona-generation calls.
+PERSONAS = [
+    Persona(
+        name="NHL Bettor",
+        role_description="Compares market prices, implied probabilities, and matchup context to find value bets.",
+    ),
+    Persona(
+        name="Hockey Analyst",
+        role_description="Focuses on team form, head-to-head trends, and situational factors like rest and travel.",
+    ),
+    Persona(
+        name="Sports Journalist",
+        role_description="Writes clear explanations of NHL matchup narratives using stats and recent performance context.",
+    ),
+]
 
 # Hand-crafted questions focused on matchup analysis — Mismatch's core use case
 HAND_CRAFTED = [
@@ -84,6 +121,44 @@ def load_docs_as_langchain(docs_path: Path) -> list[Document]:
     return documents
 
 
+def sample_documents_for_synthetic_generation(
+    documents: list[Document], target_size: int
+) -> list[Document]:
+    """Stratified random sample by doc_type to keep synthetic generation fast."""
+    if len(documents) <= target_size:
+        return documents
+
+    rng = random.Random(42)
+    by_doc_type: dict[str, list[Document]] = defaultdict(list)
+    for doc in documents:
+        by_doc_type[str(doc.metadata.get("doc_type", "unknown"))].append(doc)
+
+    sampled: list[Document] = []
+    used_ids: set[int] = set()
+    per_type_target = max(1, target_size // len(TARGET_DOC_TYPES))
+
+    # First pass: balanced sampling from the core doc types.
+    for doc_type in TARGET_DOC_TYPES:
+        candidates = by_doc_type.get(doc_type, [])
+        if not candidates:
+            continue
+        chosen = rng.sample(candidates, min(per_type_target, len(candidates)))
+        for doc in chosen:
+            sampled.append(doc)
+            used_ids.add(id(doc))
+
+    # Second pass: top up to target_size from remaining docs.
+    remaining_target = target_size - len(sampled)
+    if remaining_target <= 0:
+        return sampled[:target_size]
+
+    remaining_docs = [doc for doc in documents if id(doc) not in used_ids]
+    if remaining_docs:
+        sampled.extend(rng.sample(remaining_docs, min(remaining_target, len(remaining_docs))))
+
+    return sampled[:target_size]
+
+
 def main() -> None:
     docs_path = settings.PROCESSED_DATA_PATH
     if not docs_path.exists():
@@ -93,6 +168,15 @@ def main() -> None:
     print(f"loading docs from {docs_path}")
     documents = load_docs_as_langchain(docs_path)
     print(f"loaded {len(documents)} documents")
+    sampled_documents = sample_documents_for_synthetic_generation(
+        documents=documents,
+        target_size=SAMPLED_DOC_COUNT,
+    )
+    sampled_doc_types: dict[str, int] = defaultdict(int)
+    for doc in sampled_documents:
+        sampled_doc_types[str(doc.metadata.get("doc_type", "unknown"))] += 1
+    print(f"sampled {len(sampled_documents)} documents for synthetic generation")
+    print(f"sampled doc_type distribution: {dict(sorted(sampled_doc_types.items()))}")
 
     generator_llm = LangchainLLMWrapper(
         ChatOpenAI(model=settings.OPENAI_MODEL, api_key=settings.OPENAI_API_KEY)
@@ -105,7 +189,9 @@ def main() -> None:
     )
 
     generator = TestsetGenerator(
-        llm=generator_llm, embedding_model=embedding_model
+        llm=generator_llm,
+        embedding_model=embedding_model,
+        persona_list=PERSONAS,
     )
 
     query_distribution = [
@@ -117,19 +203,34 @@ def main() -> None:
     testset_size = 10
     print(f"generating synthetic testset (~{testset_size} examples)...")
     synthetic_rows: list[dict] = []
-    try:
-        testset = generator.generate_with_langchain_docs(
-            documents,
-            testset_size=testset_size,
-            query_distribution=query_distribution,
-        )
-        synthetic_rows = testset.to_pandas().to_dict(orient="records")
-        print(f"generated {len(synthetic_rows)} synthetic examples")
-    except Exception as e:
-        print(f"warning: synthetic generation failed: {e}")
-        print("continuing with hand-crafted examples only")
+    last_error: Exception | None = None
+    for attempt in range(1, SYNTHETIC_GENERATION_RETRIES + 1):
+        try:
+            testset = generator.generate_with_langchain_docs(
+                sampled_documents,
+                testset_size=testset_size,
+                query_distribution=query_distribution,
+                run_config=RAGAS_RUN_CONFIG,
+                raise_exceptions=False,
+            )
+            synthetic_rows = testset.to_pandas().to_dict(orient="records")
+            print(f"generated {len(synthetic_rows)} synthetic examples")
+            break
+        except Exception as e:
+            last_error = e
+            print(f"warning: synthetic generation attempt {attempt} failed: {e}")
+            if attempt < SYNTHETIC_GENERATION_RETRIES:
+                sleep_seconds = attempt * 2
+                print(f"retrying in {sleep_seconds}s...")
+                time.sleep(sleep_seconds)
 
-    # Combine synthetic + hand-crafted
+    if not synthetic_rows:
+        print("error: synthetic generation failed after retries.")
+        if last_error is not None:
+            print(f"last error: {last_error}")
+        sys.exit(1)
+
+    # Keep synthetic-only dataset for baseline RAGAS evaluation.
     all_examples = []
     for row in synthetic_rows:
         all_examples.append({
@@ -137,13 +238,6 @@ def main() -> None:
             "reference": str(row.get("reference", "")),
             "reference_contexts": row.get("reference_contexts", []),
             "source": "synthetic",
-        })
-    for hc in HAND_CRAFTED:
-        all_examples.append({
-            "user_input": hc["user_input"],
-            "reference": hc["reference"],
-            "reference_contexts": [],
-            "source": "hand_crafted",
         })
 
     # Save locally

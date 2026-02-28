@@ -1,62 +1,95 @@
 [
   {
-    "user_input": "How have the Bruins and Maple Leafs done head-to-head in 2024-25?",
-    "reference": "The Bruins vs Maple Leafs 2024-25 head-to-head season summary shows their win/loss record, goals for/against, and home/away splits.",
-    "reference_contexts": [],
-    "source": "hand_crafted"
+    "user_input": "How good New York Islanders do this season?",
+    "reference": "New York Islanders have played 58 games with a win rate of 0.552. They score an average of 2.91 goals per game and allow 2.79 goals against per game. Their home win rate is 0.571 and away win rate is 0.533.",
+    "reference_contexts": [
+      "New York Islanders 2025-26 season summary. Games: 58. Win rate: 0.552. Goals for per game: 2.91. Goals against per game: 2.79. Home win rate: 0.571. Away win rate: 0.533. Average rest days: 2.09. Back-to-back rate: 0.155. Date range: 2025-10-09 to 2026-02-05."
+    ],
+    "source": "synthetic"
   },
   {
-    "user_input": "What's the recent matchup history between the Panthers and Lightning?",
-    "reference": "The Panthers vs Lightning recent head-to-head summary covers their last 8 meetings across seasons with record, goals, and OT/SO counts.",
-    "reference_contexts": [],
-    "source": "hand_crafted"
+    "user_input": "What were the Montreal Canadiens' key statistics during the 2023-24 NHL season?",
+    "reference": "During the 2023-24 season, the Montreal Canadiens played 82 games with a win rate of 0.366. They averaged 2.88 goals for per game and 3.52 goals against per game. Their home win rate was 0.390, while their away win rate was 0.341. The team had an average of 2.32 rest days and a back-to-back rate of 0.159, with the season spanning from October 11, 2023, to April 16, 2024.",
+    "reference_contexts": [
+      "Montreal Canadiens 2023-24 season summary. Games: 82. Win rate: 0.366. Goals for per game: 2.88. Goals against per game: 3.52. Home win rate: 0.390. Away win rate: 0.341. Average rest days: 2.32. Back-to-back rate: 0.159. Date range: 2023-10-11 to 2024-04-16."
+    ],
+    "source": "synthetic"
   },
   {
-    "user_input": "Who has the edge when the Rangers play the Penguins at home?",
-    "reference": "The Rangers vs Penguins head-to-head summaries include home/away splits showing each team's home win count in the matchup.",
-    "reference_contexts": [],
-    "source": "hand_crafted"
+    "user_input": "What is the win rate of the Calgary Flames for the 2023-24 season?",
+    "reference": "The Calgary Flames have a win rate of 0.463 for the 2023-24 season.",
+    "reference_contexts": [
+      "Calgary Flames 2023-24 season summary. Games: 82. Win rate: 0.463. Goals for per game: 3.09. Goals against per game: 3.30. Home win rate: 0.512. Away win rate: 0.415. Average rest days: 2.35. Back-to-back rate: 0.098. Date range: 2023-10-11 to 2024-04-18."
+    ],
+    "source": "synthetic"
   },
   {
-    "user_input": "How did the Capitals vs Penguins matchup in 2023-24 compare to 2024-25?",
-    "reference": "Comparing the Capitals vs Penguins h2h_season docs for 2023-24 and 2024-25 shows how the rivalry shifted year over year.",
-    "reference_contexts": [],
-    "source": "hand_crafted"
+    "user_input": "How many games Washington Capitals play in 2025-26?",
+    "reference": "Washington Capitals play 59 games in the 2025-26 season.",
+    "reference_contexts": [
+      "Washington Capitals 2025-26 season summary. Games: 59. Win rate: 0.492. Goals for per game: 3.20. Goals against per game: 3.00. Home win rate: 0.567. Away win rate: 0.414. Average rest days: 2.07. Back-to-back rate: 0.169. Date range: 2025-10-08 to 2026-02-05."
+    ],
+    "source": "synthetic"
   },
   {
-    "user_input": "Are the Jets on a hot streak, and how have they done against the Wild recently?",
-    "reference": "The Jets' recent form summary shows their current streak, while the Jets vs Wild recent h2h summary shows their head-to-head record.",
-    "reference_contexts": [],
-    "source": "hand_crafted"
+    "user_input": "Wut is the Calgary Flames perfomance stats for the 2024-10-09 season, includin win rate and goals?",
+    "reference": "The Calgary Flames' 2024-25 season summary indicates a total of 82 games played with a win rate of 0.500. They scored an average of 2.74 goals per game while allowing 2.90 goals against per game. Their home win rate stands at 0.561, while the away win rate is 0.439. The average rest days between games is 2.35, and their back-to-back game rate is 0.122. The date range for this season is from 2024-10-09 to 2025-04-17.",
+    "reference_contexts": [
+      "Calgary Flames 2024-25 season summary. Games: 82. Win rate: 0.500. Goals for per game: 2.74. Goals against per game: 2.90. Home win rate: 0.561. Away win rate: 0.439. Average rest days: 2.35. Back-to-back rate: 0.122. Date range: 2024-10-09 to 2025-04-17."
+    ],
+    "source": "synthetic"
   },
   {
-    "user_input": "Have the Oilers or the Flames won more head-to-head games in 2024-25?",
-    "reference": "The Calgary Flames vs Edmonton Oilers 2024-25 h2h_season summary shows each team's win count in their Battle of Alberta matchups.",
-    "reference_contexts": [],
-    "source": "hand_crafted"
+    "user_input": "How do the recent performances of the Pittsburgh Penguins compare to the Tampa Bay Lightning based on their last 10 games?",
+    "reference": "In their last 10 games, both the Pittsburgh Penguins and Tampa Bay Lightning have a win rate of 0.500. The Penguins scored an average of 3.00 goals per game while allowing 3.20 goals against per game. In contrast, the Lightning scored more, averaging 3.50 goals per game, and allowed fewer, with 2.70 goals against per game. The Penguins have a home win rate of 0.750 and an away win rate of 0.333, whereas the Lightning have a home win rate of 0.600 and an away win rate of 0.400.",
+    "reference_contexts": [
+      "<1-hop>\n\nPittsburgh Penguins 2024-25 last 10 summary. Games: 10. Win rate: 0.500. Goals for per game: 3.00. Goals against per game: 3.20. Home win rate: 0.750. Away win rate: 0.333. Average rest days: 2.50. Back-to-back rate: 0.100. Date range: 2025-03-25 to 2025-04-17.",
+      "<2-hop>\n\nTampa Bay Lightning 2024-25 last 10 summary. Games: 10. Win rate: 0.500. Goals for per game: 3.50. Goals against per game: 2.70. Home win rate: 0.600. Away win rate: 0.400. Average rest days: 2.10. Back-to-back rate: 0.000. Date range: 2025-03-29 to 2025-04-17.",
+      "<3-hop>\n\nOttawa Senators vs Tampa Bay Lightning 2025-26 head-to-head season summary. Games: 1. Ottawa Senators wins: 1. Tampa Bay Lightning wins: 0. Ottawa Senators goals for: 5. Tampa Bay Lightning goals for: 4. Ottawa Senators home games: 0 (wins: 0). Tampa Bay Lightning home games: 1 (wins: 0). OT/SO games: 1. Date range: 2025-10-09 to 2025-10-09."
+    ],
+    "source": "synthetic"
   },
   {
-    "user_input": "How many overtime or shootout games have the Avalanche and Stars played recently?",
-    "reference": "The Avalanche vs Stars recent h2h summary includes the OT/SO game count across their last 8 meetings.",
-    "reference_contexts": [],
-    "source": "hand_crafted"
+    "user_input": "How do the recent performances of the Tampa Bay Lightning compare to the Vegas Golden Knights in terms of win rates and goals per game?",
+    "reference": "The Tampa Bay Lightning had a win rate of 0.500 over their last 10 games, scoring an average of 3.50 goals per game while allowing 2.70 goals against. In contrast, the Vegas Golden Knights had a win rate of 0.549 over their entire 2023-24 season, with an average of 3.26 goals for per game and 2.99 goals against per game. This indicates that while the Lightning had a higher goals for average in their recent games, the Golden Knights maintained a better overall win rate throughout their season.",
+    "reference_contexts": [
+      "<1-hop>\n\nTampa Bay Lightning 2024-25 last 10 summary. Games: 10. Win rate: 0.500. Goals for per game: 3.50. Goals against per game: 2.70. Home win rate: 0.600. Away win rate: 0.400. Average rest days: 2.10. Back-to-back rate: 0.000. Date range: 2025-03-29 to 2025-04-17.",
+      "<2-hop>\n\nVegas Golden Knights 2023-24 season summary. Games: 82. Win rate: 0.549. Goals for per game: 3.26. Goals against per game: 2.99. Home win rate: 0.659. Away win rate: 0.439. Average rest days: 2.36. Back-to-back rate: 0.134. Date range: 2023-10-10 to 2024-04-18."
+    ],
+    "source": "synthetic"
   },
   {
-    "user_input": "Which team scores more goals in the Hurricanes vs Devils matchup in 2024-25?",
-    "reference": "The Hurricanes vs Devils 2024-25 h2h_season summary includes total goals for each team across their season meetings.",
-    "reference_contexts": [],
-    "source": "hand_crafted"
+    "user_input": "How many games did Ottawa Senators win against Edmonton Oilers and what was their performance against Calgary Flames?",
+    "reference": "Ottawa Senators won 1 game against Edmonton Oilers in their last 8 meetings, while Calgary Flames won 1 game against Edmonton Oilers in their 2024-25 head-to-head season summary.",
+    "reference_contexts": [
+      "<1-hop>\n\nCalgary Flames vs Edmonton Oilers 2024-25 head-to-head season summary. Games: 3. Calgary Flames wins: 1. Edmonton Oilers wins: 2. Calgary Flames goals for: 8. Edmonton Oilers goals for: 8. Calgary Flames home games: 1 (wins: 0). Edmonton Oilers home games: 2 (wins: 1). OT/SO games: 3. Date range: 2024-10-13 to 2025-03-29.",
+      "<2-hop>\n\nEdmonton Oilers vs Ottawa Senators all head-to-head recent (last 8 meetings) summary. Games: 5. Edmonton Oilers wins: 4. Ottawa Senators wins: 1. Edmonton Oilers goals for: 17. Ottawa Senators goals for: 11. Edmonton Oilers home games: 2 (wins: 2). Ottawa Senators home games: 3 (wins: 1). OT/SO games: 5. Date range: 2024-01-06 to 2025-10-21.",
+      "<3-hop>\n\nOttawa Senators vs Tampa Bay Lightning 2025-26 head-to-head season summary. Games: 1. Ottawa Senators wins: 1. Tampa Bay Lightning wins: 0. Ottawa Senators goals for: 5. Tampa Bay Lightning goals for: 4. Ottawa Senators home games: 0 (wins: 0). Tampa Bay Lightning home games: 1 (wins: 0). OT/SO games: 1. Date range: 2025-10-09 to 2025-10-09."
+    ],
+    "source": "synthetic"
   },
   {
-    "user_input": "What is the Maple Leafs' overall season form in 2024-25 and how does it compare to their record against the Canadiens?",
-    "reference": "The Maple Leafs' 2024-25 team_season_summary shows their overall win rate, while the Canadiens vs Maple Leafs h2h_season summary shows matchup-specific results.",
-    "reference_contexts": [],
-    "source": "hand_crafted"
+    "user_input": "Calgry Flames vs Edmnton Oilers 2024-10-13 head-to-head record?",
+    "reference": "In the head-to-head season summary for the Calgary Flames vs Edmonton Oilers, the teams played 3 games. The Calgary Flames won 1 game, while the Edmonton Oilers won 2 games. Both teams scored a total of 8 goals each. The Calgary Flames played 1 home game but did not win, while the Edmonton Oilers played 2 home games and won 1. The date range for these games is from 2024-10-13 to 2025-03-29.",
+    "reference_contexts": [
+      "<1-hop>\n\nCalgary Flames vs Edmonton Oilers 2024-25 head-to-head season summary. Games: 3. Calgary Flames wins: 1. Edmonton Oilers wins: 2. Calgary Flames goals for: 8. Edmonton Oilers goals for: 8. Calgary Flames home games: 1 (wins: 0). Edmonton Oilers home games: 2 (wins: 1). OT/SO games: 3. Date range: 2024-10-13 to 2025-03-29."
+    ],
+    "source": "synthetic"
   },
   {
-    "user_input": "How have the Golden Knights and Kings matched up across the last few seasons?",
-    "reference": "The Golden Knights vs Kings recent h2h summary covers their last 8 meetings across multiple seasons with record, goals, and home/away splits.",
-    "reference_contexts": [],
-    "source": "hand_crafted"
+    "user_input": "So like, what the head-to-head record between Carolina Hurricanes and Los Angeles Kings say for their last 8 games, and how many goals they scored in that time, and what about their wins at home, like, you know, since 2023-10-14?",
+    "reference": "In the last 8 meetings between the Carolina Hurricanes and the Los Angeles Kings, both teams have won 3 games each. The Hurricanes scored a total of 19 goals while the Kings scored 26 goals. When looking at home games, both teams played 3 games at home, with each team winning 1 of those games. This data is relevant from the date range of 2023-10-14 to 2026-02-01.",
+    "reference_contexts": [
+      "<1-hop>\n\nCarolina Hurricanes vs Los Angeles Kings all head-to-head recent (last 8 meetings) summary. Games: 6. Carolina Hurricanes wins: 3. Los Angeles Kings wins: 3. Carolina Hurricanes goals for: 19. Los Angeles Kings goals for: 26. Carolina Hurricanes home games: 3 (wins: 1). Los Angeles Kings home games: 3 (wins: 1). OT/SO games: 6. Date range: 2023-10-14 to 2026-02-01."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What the Florida Panthers stats for last 10 games before 2024-03-28, like win rate and goals for per game?",
+    "reference": "The Florida Panthers had a win rate of 0.600 in their last 10 games before 2024-03-28, scoring an average of 3.40 goals for per game while allowing 2.30 goals against per game. Their home win rate was 0.833, but their away win rate was only 0.250, with an average of 2.10 rest days between games and a back-to-back rate of 0.100.",
+    "reference_contexts": [
+      "<1-hop>\n\nFlorida Panthers 2023-24 last 10 summary. Games: 10. Win rate: 0.600. Goals for per game: 3.40. Goals against per game: 2.30. Home win rate: 0.833. Away win rate: 0.250. Average rest days: 2.10. Back-to-back rate: 0.100. Date range: 2024-03-28 to 2024-04-16."
+    ],
+    "source": "synthetic"
   }
 ]
