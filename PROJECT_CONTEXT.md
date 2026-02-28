@@ -23,7 +23,7 @@
 - `services/agent/scripts/generate_testset.py` — RAGAS TestsetGenerator with doc sampling, static personas, and retry logic (uploads to LangSmith)
 - `services/agent/scripts/eval_baseline.py` — RAGAS baseline eval (Faithfulness, ContextRecall, ContextEntityRecall, AnswerRelevancy, FactualCorrectness)
 - `services/agent/data/processed/docs.jsonl` — 2,251 docs (288 per-team + ~1,467 h2h_season + ~496 h2h_recent)
-- `services/agent/data/eval/testset.json` — 11 synthetic eval examples (RAGAS TestsetGenerator)
+- `services/agent/data/eval/testset.json` — 51 synthetic eval examples (RAGAS TestsetGenerator, ~50 target)
 - `services/agent/data/eval/baseline_results.json` — baseline RAGAS scores
 - `services/agent/pyproject.toml` — all deps including ragas, langchain-openai, langchain-cohere
 - `web/` — Next.js chat UI with /api/chat proxy
@@ -35,17 +35,17 @@
   "revision_id": "baseline",
   "retrieval": "dense_cosine_qdrant",
   "retrieval_limit": 6,
-  "num_examples": 11,
+  "num_examples": 51,
   "metrics": {
-    "faithfulness": 0.814,
-    "context_recall": 0.705,
-    "context_entity_recall": 0.438,
-    "answer_relevancy": 0.656
+    "faithfulness": 0.820,
+    "context_recall": 0.712,
+    "context_entity_recall": 0.356,
+    "answer_relevancy": 0.640
   }
 }
 ```
-- Golden dataset: 11 synthetic examples via RAGAS TestsetGenerator (SingleHop 50%, MultiHopAbstract 25%, MultiHopSpecific 25%)
-- Synthetic generation uses stratified doc sampling (100 of 2,251 docs) and static personas to avoid RAGAS API calls
+- Golden dataset: 51 synthetic examples via RAGAS TestsetGenerator (SingleHop 50%, MultiHopAbstract 25%, MultiHopSpecific 25%)
+- Synthetic generation uses stratified doc sampling (100 of 2,251 docs) and static personas
 - Doc corpus: 2,251 docs (288 per-team summaries + 1,467 h2h_season + 496 h2h_recent)
 - Next: Cohere rerank (Step 8) should improve retrieval precision
 

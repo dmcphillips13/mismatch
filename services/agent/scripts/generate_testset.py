@@ -28,6 +28,7 @@ from app.settings import settings
 
 TESTSET_OUTPUT = Path("data/eval/testset.json")
 SAMPLED_DOC_COUNT = 100
+SYNTHETIC_TESTSET_SIZE = 50
 TARGET_DOC_TYPES = [
     "team_season_summary",
     "team_form_summary_last10",
@@ -200,7 +201,7 @@ def main() -> None:
         (MultiHopSpecificQuerySynthesizer(llm=generator_llm), 0.25),
     ]
 
-    testset_size = 10
+    testset_size = SYNTHETIC_TESTSET_SIZE
     print(f"generating synthetic testset (~{testset_size} examples)...")
     synthetic_rows: list[dict] = []
     last_error: Exception | None = None
