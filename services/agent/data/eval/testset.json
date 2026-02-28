@@ -1,0 +1,62 @@
+[
+  {
+    "user_input": "How have the Bruins and Maple Leafs done head-to-head in 2024-25?",
+    "reference": "The Bruins vs Maple Leafs 2024-25 head-to-head season summary shows their win/loss record, goals for/against, and home/away splits.",
+    "reference_contexts": [],
+    "source": "hand_crafted"
+  },
+  {
+    "user_input": "What's the recent matchup history between the Panthers and Lightning?",
+    "reference": "The Panthers vs Lightning recent head-to-head summary covers their last 8 meetings across seasons with record, goals, and OT/SO counts.",
+    "reference_contexts": [],
+    "source": "hand_crafted"
+  },
+  {
+    "user_input": "Who has the edge when the Rangers play the Penguins at home?",
+    "reference": "The Rangers vs Penguins head-to-head summaries include home/away splits showing each team's home win count in the matchup.",
+    "reference_contexts": [],
+    "source": "hand_crafted"
+  },
+  {
+    "user_input": "How did the Capitals vs Penguins matchup in 2023-24 compare to 2024-25?",
+    "reference": "Comparing the Capitals vs Penguins h2h_season docs for 2023-24 and 2024-25 shows how the rivalry shifted year over year.",
+    "reference_contexts": [],
+    "source": "hand_crafted"
+  },
+  {
+    "user_input": "Are the Jets on a hot streak, and how have they done against the Wild recently?",
+    "reference": "The Jets' recent form summary shows their current streak, while the Jets vs Wild recent h2h summary shows their head-to-head record.",
+    "reference_contexts": [],
+    "source": "hand_crafted"
+  },
+  {
+    "user_input": "Have the Oilers or the Flames won more head-to-head games in 2024-25?",
+    "reference": "The Calgary Flames vs Edmonton Oilers 2024-25 h2h_season summary shows each team's win count in their Battle of Alberta matchups.",
+    "reference_contexts": [],
+    "source": "hand_crafted"
+  },
+  {
+    "user_input": "How many overtime or shootout games have the Avalanche and Stars played recently?",
+    "reference": "The Avalanche vs Stars recent h2h summary includes the OT/SO game count across their last 8 meetings.",
+    "reference_contexts": [],
+    "source": "hand_crafted"
+  },
+  {
+    "user_input": "Which team scores more goals in the Hurricanes vs Devils matchup in 2024-25?",
+    "reference": "The Hurricanes vs Devils 2024-25 h2h_season summary includes total goals for each team across their season meetings.",
+    "reference_contexts": [],
+    "source": "hand_crafted"
+  },
+  {
+    "user_input": "What is the Maple Leafs' overall season form in 2024-25 and how does it compare to their record against the Canadiens?",
+    "reference": "The Maple Leafs' 2024-25 team_season_summary shows their overall win rate, while the Canadiens vs Maple Leafs h2h_season summary shows matchup-specific results.",
+    "reference_contexts": [],
+    "source": "hand_crafted"
+  },
+  {
+    "user_input": "How have the Golden Knights and Kings matched up across the last few seasons?",
+    "reference": "The Golden Knights vs Kings recent h2h summary covers their last 8 meetings across multiple seasons with record, goals, and home/away splits.",
+    "reference_contexts": [],
+    "source": "hand_crafted"
+  }
+]

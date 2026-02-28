@@ -14,9 +14,14 @@ class RetrievedDocument:
     metadata: dict[str, Any]
 
     def to_citation(self) -> dict[str, Any]:
+        teams = self.metadata.get("teams")
+        if teams and isinstance(teams, list) and len(teams) >= 2:
+            label = f"{teams[0]} vs {teams[1]}"
+        else:
+            label = self.metadata.get("team")
         return {
             "id": self.id,
-            "label": self.metadata.get("team"),
+            "label": label,
             "season_id": self.metadata.get("season_id"),
             "doc_type": self.metadata.get("doc_type"),
             "source": "qdrant",
