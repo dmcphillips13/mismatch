@@ -12,6 +12,14 @@ from statistics import mean
 
 from app.utils.team_names import normalize_team_name, slugify_team_name
 
+# ---------- Matchup key helper ----------
+
+def _matchup_key(team_a: str, team_b: str) -> tuple[str, str]:
+    """Return team pair in alphabetical order for consistent matchup grouping."""
+    return (team_a, team_b) if team_a < team_b else (team_b, team_a)
+
+
+# ---------- Dataclasses ----------
 
 @dataclass(slots=True)
 class GameRecord:
@@ -132,6 +140,96 @@ def _avg(values: list[int | float]) -> float:
     return float(mean(values))
 
 
+@dataclass(slots=True)
+class MatchupGame:
+    """A single game viewed from the matchup (team_a vs team_b, alphabetical)."""
+    team_a: str
+    team_b: str
+    team_a_goals: int
+    team_b_goals: int
+    team_a_home: bool
+    status: str
+    date: date
+    season_id: str
+
+
+def build_matchup_index(
+    games: list[GameRecord],
+) -> dict[tuple[str, str, str], list[MatchupGame]]:
+    """Group all GameRecords into per-matchup-per-season lists.
+
+    Key: (season_id, team_a, team_b) with team_a < team_b alphabetically.
+    """
+    index: dict[tuple[str, str, str], list[MatchupGame]] = defaultdict(list)
+    for g in games:
+        a, b = _matchup_key(g.home_team, g.away_team)
+        if a == g.home_team:
+            mg = MatchupGame(
+                team_a=a, team_b=b,
+                team_a_goals=g.home_goals, team_b_goals=g.away_goals,
+                team_a_home=True, status=g.status,
+                date=g.date, season_id=g.season_id,
+            )
+        else:
+            mg = MatchupGame(
+                team_a=a, team_b=b,
+                team_a_goals=g.away_goals, team_b_goals=g.home_goals,
+                team_a_home=False, status=g.status,
+                date=g.date, season_id=g.season_id,
+            )
+        index[(g.season_id, a, b)].append(mg)
+    # Sort each list by date
+    for matchups in index.values():
+        matchups.sort(key=lambda m: m.date)
+    return index
+
+
+def _build_h2h_doc(
+    team_a: str,
+    team_b: str,
+    season_id: str,
+    matchups: list[MatchupGame],
+    doc_type: str,
+) -> dict[str, object]:
+    """Build a single head-to-head summary document."""
+    a_wins = sum(1 for m in matchups if m.team_a_goals > m.team_b_goals)
+    b_wins = sum(1 for m in matchups if m.team_b_goals > m.team_a_goals)
+    a_gf = sum(m.team_a_goals for m in matchups)
+    b_gf = sum(m.team_b_goals for m in matchups)
+    a_home = [m for m in matchups if m.team_a_home]
+    b_home = [m for m in matchups if not m.team_a_home]
+    a_home_wins = sum(1 for m in a_home if m.team_a_goals > m.team_b_goals)
+    b_home_wins = sum(1 for m in b_home if m.team_b_goals > m.team_a_goals)
+    ot_so = sum(1 for m in matchups if m.status not in ("Final", "Unknown", ""))
+
+    slug_a = slugify_team_name(team_a)
+    slug_b = slugify_team_name(team_b)
+
+    label = "season" if doc_type == "h2h_season" else "recent (last 8 meetings)"
+    text = (
+        f"{team_a} vs {team_b} {season_id} head-to-head {label} summary. "
+        f"Games: {len(matchups)}. "
+        f"{team_a} wins: {a_wins}. {team_b} wins: {b_wins}. "
+        f"{team_a} goals for: {a_gf}. {team_b} goals for: {b_gf}. "
+        f"{team_a} home games: {len(a_home)} (wins: {a_home_wins}). "
+        f"{team_b} home games: {len(b_home)} (wins: {b_home_wins}). "
+        f"OT/SO games: {ot_so}. "
+        f"Date range: {matchups[0].date.isoformat()} to {matchups[-1].date.isoformat()}."
+    )
+    return {
+        "id": f"{season_id}:{slug_a}-vs-{slug_b}:{doc_type}",
+        "text": text,
+        "metadata": {
+            "teams": [team_a, team_b],
+            "season_id": season_id,
+            "doc_type": doc_type,
+            "date_range": f"{matchups[0].date.isoformat()} to {matchups[-1].date.isoformat()}",
+            "created_at": date.today().isoformat(),
+            "game_count": len(matchups),
+        },
+    }
+
+
 def _build_doc(
     team: str,
     season_id: str,
@@ -229,7 +327,59 @@ def build_documents(
                 window=min(20, len(games)),
             )
         )
+
+    # --- H2H matchup docs ---
+    matchup_index = build_matchup_index(all_games)
+
+    # h2h_season: one doc per matchup per season
+    for (season_id, team_a, team_b), matchups in sorted(matchup_index.items()):
+        docs.append(_build_h2h_doc(team_a, team_b, season_id, matchups, "h2h_season"))
+
+    # h2h_recent: last 8 meetings across all seasons per unique pair
+    cross_season: dict[tuple[str, str], list[MatchupGame]] = defaultdict(list)
+    for (_sid, team_a, team_b), matchups in matchup_index.items():
+        cross_season[(team_a, team_b)].extend(matchups)
+    for (team_a, team_b), all_matchups in sorted(cross_season.items()):
+        all_matchups.sort(key=lambda m: m.date)
+        recent = all_matchups[-8:]
+        docs.append(_build_h2h_doc(team_a, team_b, "all", recent, "h2h_recent"))
+
     return docs, validation_logs(by_team, season_totals)
+
+
+def chunk_documents(
+    docs: list[dict[str, object]],
+    chunk_size: int = 500,
+    chunk_overlap: int = 50,
+) -> list[dict[str, object]]:
+    """Split documents that exceed chunk_size using RecursiveCharacterTextSplitter.
+
+    Short documents pass through unchanged. Long documents are split into
+    multiple chunks with metadata propagated and chunk index appended to the ID.
+    """
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+    )
+    chunked: list[dict[str, object]] = []
+    for doc in docs:
+        chunks = splitter.split_text(doc["text"])
+        if len(chunks) == 1:
+            chunked.append(doc)
+        else:
+            for i, chunk_text in enumerate(chunks):
+                chunked.append({
+                    "id": f"{doc['id']}_chunk_{i}",
+                    "text": chunk_text,
+                    "metadata": {
+                        **doc["metadata"],
+                        "chunk_index": i,
+                        "parent_doc_id": doc["id"],
+                    },
+                })
+    return chunked
 
 
 def write_documents(output_path: Path, docs: list[dict[str, object]]) -> None:

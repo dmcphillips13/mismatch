@@ -64,9 +64,9 @@ class QdrantRetrievalService:
         query_filter = _build_filter(
             teams=teams, season_ids=season_ids, doc_types=doc_types
         )
-        points = self._client.search(
+        response = self._client.query_points(
             collection_name=settings.QDRANT_COLLECTION,
-            query_vector=query_vector,
+            query=query_vector,
             query_filter=query_filter,
             limit=limit,
             with_payload=True,
@@ -78,7 +78,7 @@ class QdrantRetrievalService:
                 score=float(point.score),
                 metadata=dict(point.payload.get("metadata", {})),
             )
-            for point in points
+            for point in response.points
         ]
 
     def upsert_jsonl(self, docs_path: Path) -> int:
@@ -128,12 +128,18 @@ def _build_filter(
     doc_types: list[str] | None = None,
 ) -> models.Filter | None:
     """Build a Qdrant filter from optional field constraints."""
-    conditions: list[models.FieldCondition] = []
+    conditions: list[models.Condition] = []
     if teams:
+        # OR: match per-team docs (metadata.team) or H2H docs (metadata.teams[])
         conditions.append(
-            models.FieldCondition(
-                key="metadata.team", match=models.MatchAny(any=teams)
-            )
+            models.Filter(should=[
+                models.FieldCondition(
+                    key="metadata.team", match=models.MatchAny(any=teams)
+                ),
+                models.FieldCondition(
+                    key="metadata.teams", match=models.MatchAny(any=teams)
+                ),
+            ])
         )
     if season_ids:
         conditions.append(
