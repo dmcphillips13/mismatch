@@ -1,0 +1,21 @@
+{
+  "revision_id": "cohere_rerank",
+  "retrieval": "dense_cosine_qdrant+cohere_rerank_v3.5",
+  "retrieval_limit": 10,
+  "rerank_top_n": 5,
+  "num_examples": 51,
+  "metrics": {
+    "faithfulness": 0.9113759443171208,
+    "context_recall": 0.757843137254902,
+    "context_entity_recall": 0.35989516930035775,
+    "answer_relevancy": 0.6720143878082833,
+    "factual_correctness": 0.39862745098039215
+  },
+  "performance": {
+    "avg_latency_ms": 6392.54,
+    "p95_latency_ms": 29615.25,
+    "avg_cost_usd": 0.00015213529411764706,
+    "total_cost_usd": 0.0077589,
+    "sample_count": 51
+  }
+}

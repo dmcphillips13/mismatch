@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     TAVILY_API_BASE_URL: str = "https://api.tavily.com"
 
     COHERE_API_KEY: str | None = None
+    COHERE_RERANK_MODEL: str = "rerank-v3.5"
 
     # Thresholds
     EDGE_THRESHOLD: float = 0.03
