@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     KALSHI_API_KEY: str | None = None
     KALSHI_EMAIL: str | None = None
     KALSHI_PASSWORD: str | None = None
-    KALSHI_API_BASE_URL: str = "https://trading-api.kalshi.com/trade-api/v2"
+    KALSHI_API_BASE_URL: str = "https://api.elections.kalshi.com/trade-api/v2"
 
     TAVILY_API_KEY: str | None = None
     TAVILY_API_BASE_URL: str = "https://api.tavily.com"
