@@ -1,7 +1,8 @@
 # PROJECT_CONTEXT — Mismatch
 
 ## Current completed step
-- Step 8 complete (Cohere rerank + RAGAS comparison eval)
+- Step 9 complete (tools: Odds API, Kalshi, Tavily + odds math + matchup builder)
+- `/chat` endpoint is a skeleton — wired up in Step 10 (LangGraph agent)
 
 ## Current doc setup
 - Canonical spec: `AGENTS.md`
@@ -15,11 +16,17 @@
 - `services/agent/app/retrieval/service.py` — RetrievedDocument dataclass with to_citation()
 - `services/agent/app/retrieval/qdrant_store.py` — QdrantRetrievalService (ensure_collection, query_points with filters, upsert_jsonl with batching)
 - `services/agent/app/pipeline/build_docs.py` — CSV parsing, rest/b2b computation, team/season summaries, validation logs
-- `services/agent/app/utils/team_names.py` — normalize_team_name() + slugify_team_name() with full NHL alias map
+- `services/agent/app/utils/team_names.py` — normalize_team_name() + slugify_team_name() + Kalshi abbreviation maps
 - `services/agent/app/eval/__init__.py` — eval package
 - `services/agent/app/eval/rag_chain.py` — baseline + reranked RAG chains for RAGAS eval (RAGResult with token usage tracking)
 - `services/agent/app/eval/helpers.py` — shared eval utilities (metrics, cost estimation, LangSmith upload)
 - `services/agent/app/retrieval/reranker.py` — CohereRerank + ContextualCompressionRetriever (retrieve 10, rerank to 5)
+- `services/agent/app/tools/odds_math.py` — american_to_implied, devig_multiplicative, compute_edge
+- `services/agent/app/tools/models.py` — GameOdds, KalshiMarket, MatchupEdge, TavilyResult dataclasses
+- `services/agent/app/tools/odds_api.py` — OddsAPIClient (fetch NHL odds, average across bookmakers, de-vig)
+- `services/agent/app/tools/kalshi.py` — KalshiClient (fetch KXNHLGAME markets, parse tickers, resolve teams)
+- `services/agent/app/tools/tavily.py` — TavilyClient (web search via httpx)
+- `services/agent/app/tools/match.py` — build_matchup_edges() keyed by (team, date) — matches Odds API to Kalshi, computes edges, BET/PASS
 - `services/agent/scripts/build_docs.py` — CLI to run pipeline -> docs.jsonl
 - `services/agent/scripts/upsert_docs.py` — CLI to upsert docs.jsonl -> Qdrant
 - `services/agent/scripts/generate_testset.py` — RAGAS TestsetGenerator with doc sampling, static personas, and retry logic (uploads to LangSmith)
@@ -96,17 +103,29 @@
 - Latency increased due to extra Cohere API call + trial key rate limiting
 - Per-query results uploaded to LangSmith (`mismatch-eval-advanced` dataset)
 
+## Step 9 design notes
+
+### 7-day window scoping
+AGENTS.md §2 specifies "today through 7 days out". This is enforced architecturally, not via explicit date filters:
+- **Odds API** only returns games with active betting lines (~1-3 days out). No parameter exists to request a wider window.
+- **Kalshi** `status=open` markets are listed ~2-4 days ahead at most.
+- **match.py** keys on `(team, date)` — only games present in *both* APIs are matched, so the intersection is inherently short-window.
+An explicit `timedelta(days=7)` filter would be dead code that never triggers.
+
+### Matchup mapping
+`match.py` uses `(normalized_team_name, game_date)` as the composite key to prevent overwrites when a team has markets on multiple dates.
+
 ## Dependency readiness
 - OpenAI: ready
 - Qdrant Cloud: ready (2,251 docs upserted to mismatch_docs collection)
 - LangSmith: ready (golden dataset uploaded)
-- Odds API: not-ready
-- Kalshi: not-ready
-- Tavily: not-ready
+- Odds API: ready (500 req/mo free tier, h2h market, American odds)
+- Kalshi: ready (api.elections.kalshi.com, KXNHLGAME series, no auth for reads)
+- Tavily: ready (search API)
 - Cohere: ready (rerank-v3.5, trial key with 10 req/min rate limit)
 
 ## Next step
-- Step 9: LangGraph agent with tools
+- Step 10: LangGraph agent + strict schema output
 
 ## Weekend target
 - Complete Steps 8-12 and deploy.
