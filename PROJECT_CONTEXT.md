@@ -17,14 +17,14 @@
 - `services/agent/app/pipeline/build_docs.py` — CSV parsing, rest/b2b computation, team/season summaries, validation logs
 - `services/agent/app/utils/team_names.py` — normalize_team_name() + slugify_team_name() with full NHL alias map
 - `services/agent/app/eval/__init__.py` — eval package
-- `services/agent/app/eval/rag_chain.py` — simple retrieve+generate chain for RAGAS eval (RAGResult dataclass)
+- `services/agent/app/eval/rag_chain.py` — retrieve+generate chain for RAGAS eval (RAGResult with token usage tracking)
 - `services/agent/scripts/build_docs.py` — CLI to run pipeline -> docs.jsonl
 - `services/agent/scripts/upsert_docs.py` — CLI to upsert docs.jsonl -> Qdrant
 - `services/agent/scripts/generate_testset.py` — RAGAS TestsetGenerator with doc sampling, static personas, and retry logic (uploads to LangSmith)
-- `services/agent/scripts/eval_baseline.py` — RAGAS baseline eval (Faithfulness, ContextRecall, ContextEntityRecall, AnswerRelevancy, FactualCorrectness)
+- `services/agent/scripts/eval_baseline.py` — RAGAS baseline eval (5 metrics + latency/cost tracking, per-query upload to LangSmith)
 - `services/agent/data/processed/docs.jsonl` — 2,251 docs (288 per-team + ~1,467 h2h_season + ~496 h2h_recent)
 - `services/agent/data/eval/testset.json` — 51 synthetic eval examples (RAGAS TestsetGenerator, ~50 target)
-- `services/agent/data/eval/baseline_results.json` — baseline RAGAS scores
+- `services/agent/data/eval/baseline_results.json` — baseline RAGAS scores + latency/cost performance
 - `services/agent/pyproject.toml` — all deps including ragas, langchain-openai, langchain-cohere
 - `web/` — Next.js chat UI with /api/chat proxy
 - `data/raw/` — 3 NHL season CSVs
@@ -37,16 +37,23 @@
   "retrieval_limit": 6,
   "num_examples": 51,
   "metrics": {
-    "faithfulness": 0.820,
-    "context_recall": 0.712,
+    "faithfulness": 0.828,
+    "context_recall": 0.713,
     "context_entity_recall": 0.356,
-    "answer_relevancy": 0.640
+    "answer_relevancy": 0.642,
+    "factual_correctness": 0.445
+  },
+  "performance": {
+    "avg_latency_ms": 2571,
+    "p95_latency_ms": 5665,
+    "total_cost_usd": 0.0087
   }
 }
 ```
 - Golden dataset: 51 synthetic examples via RAGAS TestsetGenerator (SingleHop 50%, MultiHopAbstract 25%, MultiHopSpecific 25%)
 - Synthetic generation uses stratified doc sampling (100 of 2,251 docs) and static personas
 - Doc corpus: 2,251 docs (288 per-team summaries + 1,467 h2h_season + 496 h2h_recent)
+- Per-query metrics, latency, and cost uploaded to LangSmith (`mismatch-eval-results` dataset)
 - Next: Cohere rerank (Step 8) should improve retrieval precision
 
 ## Dependency readiness
