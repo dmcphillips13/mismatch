@@ -26,6 +26,9 @@ _RAG_PROMPT = (
 class RAGResult:
     response: str
     retrieved_contexts: list[str]
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    total_tokens: int | None = None
 
 
 def build_rag_chain(
@@ -48,9 +51,16 @@ def build_rag_chain(
         context_block = "\n\n".join(contexts)
         prompt = _RAG_PROMPT.format(context=context_block, question=question)
         response = llm.invoke(prompt)
+        token_usage = response.response_metadata.get("token_usage", {})
+        input_tokens = token_usage.get("input_tokens", token_usage.get("prompt_tokens"))
+        output_tokens = token_usage.get("output_tokens", token_usage.get("completion_tokens"))
+        total_tokens = token_usage.get("total_tokens")
         return RAGResult(
             response=response.content,
             retrieved_contexts=contexts,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            total_tokens=total_tokens,
         )
 
     return invoke
