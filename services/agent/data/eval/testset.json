@@ -8,87 +8,418 @@
     "source": "synthetic"
   },
   {
-    "user_input": "What were the Montreal Canadiens' key statistics during the 2023-24 NHL season?",
-    "reference": "During the 2023-24 season, the Montreal Canadiens played 82 games with a win rate of 0.366. They averaged 2.88 goals for per game and 3.52 goals against per game. Their home win rate was 0.390, while their away win rate was 0.341. The team had an average of 2.32 rest days and a back-to-back rate of 0.159, with the season spanning from October 11, 2023, to April 16, 2024.",
+    "user_input": "Montreal Canadiens 2024-04-16 gams stats?",
+    "reference": "The Montreal Canadiens' 2023-24 season summary includes 82 games played, a win rate of 0.366, an average of 2.88 goals for per game, and 3.52 goals against per game. Their home win rate is 0.390, while the away win rate is 0.341, with an average of 2.32 rest days and a back-to-back rate of 0.159.",
     "reference_contexts": [
       "Montreal Canadiens 2023-24 season summary. Games: 82. Win rate: 0.366. Goals for per game: 2.88. Goals against per game: 3.52. Home win rate: 0.390. Away win rate: 0.341. Average rest days: 2.32. Back-to-back rate: 0.159. Date range: 2023-10-11 to 2024-04-16."
     ],
     "source": "synthetic"
   },
   {
-    "user_input": "What is the win rate of the Calgary Flames for the 2023-24 season?",
-    "reference": "The Calgary Flames have a win rate of 0.463 for the 2023-24 season.",
+    "user_input": "What are the key statistics for the Calgary Flames in the 2023-24 season?",
+    "reference": "The Calgary Flames' 2023-24 season summary includes 82 games played, a win rate of 0.463, an average of 3.09 goals for per game, and 3.30 goals against per game. Their home win rate is 0.512, while the away win rate is 0.415. The average rest days between games is 2.35, and their back-to-back game rate is 0.098. The season spans from October 11, 2023, to April 18, 2024.",
     "reference_contexts": [
       "Calgary Flames 2023-24 season summary. Games: 82. Win rate: 0.463. Goals for per game: 3.09. Goals against per game: 3.30. Home win rate: 0.512. Away win rate: 0.415. Average rest days: 2.35. Back-to-back rate: 0.098. Date range: 2023-10-11 to 2024-04-18."
     ],
     "source": "synthetic"
   },
   {
-    "user_input": "How many games Washington Capitals play in 2025-26?",
-    "reference": "Washington Capitals play 59 games in the 2025-26 season.",
+    "user_input": "Can you provide a detailed summary of the Washington Capitals' performance during the 2025-26 season, including their win rate, goals statistics, and other relevant factors?",
+    "reference": "During the 2025-26 season, the Washington Capitals played a total of 59 games, achieving a win rate of 0.492. They scored an average of 3.20 goals per game while allowing 3.00 goals against per game. At home, their win rate was 0.567, whereas their away win rate was 0.414. The team averaged 2.07 rest days between games and had a back-to-back game rate of 0.169. This summary covers the date range from October 8, 2025, to February 5, 2026.",
     "reference_contexts": [
       "Washington Capitals 2025-26 season summary. Games: 59. Win rate: 0.492. Goals for per game: 3.20. Goals against per game: 3.00. Home win rate: 0.567. Away win rate: 0.414. Average rest days: 2.07. Back-to-back rate: 0.169. Date range: 2025-10-08 to 2026-02-05."
     ],
     "source": "synthetic"
   },
   {
-    "user_input": "Wut is the Calgary Flames perfomance stats for the 2024-10-09 season, includin win rate and goals?",
-    "reference": "The Calgary Flames' 2024-25 season summary indicates a total of 82 games played with a win rate of 0.500. They scored an average of 2.74 goals per game while allowing 2.90 goals against per game. Their home win rate stands at 0.561, while the away win rate is 0.439. The average rest days between games is 2.35, and their back-to-back game rate is 0.122. The date range for this season is from 2024-10-09 to 2025-04-17.",
+    "user_input": "What were the Calgary Flames' performance metrics leading up to April 17, 2025, including their win rate and goals statistics?",
+    "reference": "The Calgary Flames had a win rate of 0.500 during the 2024-25 season, with an average of 2.74 goals for per game and 2.90 goals against per game. Their home win rate was 0.561, while their away win rate was 0.439. The team averaged 2.35 rest days and had a back-to-back rate of 0.122, with the date range for this summary being from October 9, 2024, to April 17, 2025.",
     "reference_contexts": [
       "Calgary Flames 2024-25 season summary. Games: 82. Win rate: 0.500. Goals for per game: 2.74. Goals against per game: 2.90. Home win rate: 0.561. Away win rate: 0.439. Average rest days: 2.35. Back-to-back rate: 0.122. Date range: 2024-10-09 to 2025-04-17."
     ],
     "source": "synthetic"
   },
   {
-    "user_input": "How do the recent performances of the Pittsburgh Penguins compare to the Tampa Bay Lightning based on their last 10 games?",
-    "reference": "In their last 10 games, both the Pittsburgh Penguins and Tampa Bay Lightning have a win rate of 0.500. The Penguins scored an average of 3.00 goals per game while allowing 3.20 goals against per game. In contrast, the Lightning scored more, averaging 3.50 goals per game, and allowed fewer, with 2.70 goals against per game. The Penguins have a home win rate of 0.750 and an away win rate of 0.333, whereas the Lightning have a home win rate of 0.600 and an away win rate of 0.400.",
+    "user_input": "Wut is the Winnipeg Jets perfomance like from 2023-10-11 to 2024-04-18?",
+    "reference": "The Winnipeg Jets' performance during the 2023-24 season includes a total of 82 games with a win rate of 0.634. They scored an average of 3.16 goals per game while allowing 2.43 goals against per game. Their home win rate is 0.659, and their away win rate is 0.610. The team averages 2.35 rest days between games, with a back-to-back game rate of 0.098.",
     "reference_contexts": [
-      "<1-hop>\n\nPittsburgh Penguins 2024-25 last 10 summary. Games: 10. Win rate: 0.500. Goals for per game: 3.00. Goals against per game: 3.20. Home win rate: 0.750. Away win rate: 0.333. Average rest days: 2.50. Back-to-back rate: 0.100. Date range: 2025-03-25 to 2025-04-17.",
-      "<2-hop>\n\nTampa Bay Lightning 2024-25 last 10 summary. Games: 10. Win rate: 0.500. Goals for per game: 3.50. Goals against per game: 2.70. Home win rate: 0.600. Away win rate: 0.400. Average rest days: 2.10. Back-to-back rate: 0.000. Date range: 2025-03-29 to 2025-04-17.",
-      "<3-hop>\n\nOttawa Senators vs Tampa Bay Lightning 2025-26 head-to-head season summary. Games: 1. Ottawa Senators wins: 1. Tampa Bay Lightning wins: 0. Ottawa Senators goals for: 5. Tampa Bay Lightning goals for: 4. Ottawa Senators home games: 0 (wins: 0). Tampa Bay Lightning home games: 1 (wins: 0). OT/SO games: 1. Date range: 2025-10-09 to 2025-10-09."
+      "Winnipeg Jets 2023-24 season summary. Games: 82. Win rate: 0.634. Goals for per game: 3.16. Goals against per game: 2.43. Home win rate: 0.659. Away win rate: 0.610. Average rest days: 2.35. Back-to-back rate: 0.098. Date range: 2023-10-11 to 2024-04-18."
     ],
     "source": "synthetic"
   },
   {
-    "user_input": "How do the recent performances of the Tampa Bay Lightning compare to the Vegas Golden Knights in terms of win rates and goals per game?",
-    "reference": "The Tampa Bay Lightning had a win rate of 0.500 over their last 10 games, scoring an average of 3.50 goals per game while allowing 2.70 goals against. In contrast, the Vegas Golden Knights had a win rate of 0.549 over their entire 2023-24 season, with an average of 3.26 goals for per game and 2.99 goals against per game. This indicates that while the Lightning had a higher goals for average in their recent games, the Golden Knights maintained a better overall win rate throughout their season.",
+    "user_input": "How good is Vancouver Canucks in 2023-24 season?",
+    "reference": "Vancouver Canucks had a win rate of 0.610 in the 2023-24 season, scoring an average of 3.40 goals per game while allowing 2.72 goals against per game. Their home win rate was 0.659 and away win rate was 0.561, with an average of 2.35 rest days and a back-to-back rate of 0.110.",
+    "reference_contexts": [
+      "Vancouver Canucks 2023-24 season summary. Games: 82. Win rate: 0.610. Goals for per game: 3.40. Goals against per game: 2.72. Home win rate: 0.659. Away win rate: 0.561. Average rest days: 2.35. Back-to-back rate: 0.110. Date range: 2023-10-11 to 2024-04-18."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What was the New York Islanders' win rate during the 2023-24 season?",
+    "reference": "The New York Islanders had a win rate of 0.476 during the 2023-24 season.",
+    "reference_contexts": [
+      "New York Islanders 2023-24 season summary. Games: 82. Win rate: 0.476. Goals for per game: 3.00. Goals against per game: 3.21. Home win rate: 0.512. Away win rate: 0.439. Average rest days: 2.30. Back-to-back rate: 0.122. Date range: 2023-10-14 to 2024-04-17."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What happen with Minnesota Wild on 2023-10-12?",
+    "reference": "The context does not provide specific information about the Minnesota Wild on 2023-10-12, but it mentions that the date range for the season summary is from 2023-10-12 to 2024-04-18.",
+    "reference_contexts": [
+      "Minnesota Wild 2023-24 season summary. Games: 82. Win rate: 0.476. Goals for per game: 3.06. Goals against per game: 3.21. Home win rate: 0.488. Away win rate: 0.463. Average rest days: 2.33. Back-to-back rate: 0.183. Date range: 2023-10-12 to 2024-04-18."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "Can you provide a detailed summary of the San Jose Sharks' performance during the 2025-26 NHL season, including their win rate, goals per game, and other relevant statistics?",
+    "reference": "The San Jose Sharks' 2025-26 season summary indicates that they played a total of 55 games with a win rate of 0.491. They averaged 3.11 goals for per game while allowing 3.51 goals against per game. Their home win rate was 0.538, and their away win rate was 0.448. Additionally, the team had an average of 2.19 rest days between games and a back-to-back game rate of 0.182. The season spanned from October 9, 2025, to February 4, 2026.",
+    "reference_contexts": [
+      "San Jose Sharks 2025-26 season summary. Games: 55. Win rate: 0.491. Goals for per game: 3.11. Goals against per game: 3.51. Home win rate: 0.538. Away win rate: 0.448. Average rest days: 2.19. Back-to-back rate: 0.182. Date range: 2025-10-09 to 2026-02-04."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "Wut is the Chicago Blackhawks win rate on 2026-02-04?",
+    "reference": "The Chicago Blackhawks have a win rate of 0.386 during the 2025-26 season.",
+    "reference_contexts": [
+      "Chicago Blackhawks 2025-26 season summary. Games: 57. Win rate: 0.386. Goals for per game: 2.70. Goals against per game: 3.25. Home win rate: 0.387. Away win rate: 0.385. Average rest days: 2.14. Back-to-back rate: 0.140. Date range: 2025-10-07 to 2026-02-04."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What are the key statistics and performance metrics for the Florida Panthers during the 2023-24 NHL season?",
+    "reference": "The Florida Panthers' 2023-24 season summary includes a total of 82 games played, with a win rate of 0.634. They scored an average of 3.27 goals per game while allowing 2.44 goals against per game. Their home win rate is also 0.634, and the same applies to their away win rate. The team averages 2.31 rest days between games, with a back-to-back game rate of 0.098. The season spans from October 12, 2023, to April 16, 2024.",
+    "reference_contexts": [
+      "Florida Panthers 2023-24 season summary. Games: 82. Win rate: 0.634. Goals for per game: 3.27. Goals against per game: 2.44. Home win rate: 0.634. Away win rate: 0.634. Average rest days: 2.31. Back-to-back rate: 0.098. Date range: 2023-10-12 to 2024-04-16."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What are the key statistics for the Florida Panthers during the 2025-26 NHL season, including their win rate and goals per game?",
+    "reference": "During the 2025-26 NHL season, the Florida Panthers played 57 games with a win rate of 0.509. They averaged 3.05 goals for per game and 3.35 goals against per game. Their home win rate was 0.484, while their away win rate was 0.538. The team had an average of 2.16 rest days and a back-to-back rate of 0.140, with the season spanning from October 7, 2025, to February 5, 2026.",
+    "reference_contexts": [
+      "Florida Panthers 2025-26 season summary. Games: 57. Win rate: 0.509. Goals for per game: 3.05. Goals against per game: 3.35. Home win rate: 0.484. Away win rate: 0.538. Average rest days: 2.16. Back-to-back rate: 0.140. Date range: 2025-10-07 to 2026-02-05."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What happen with San Jose Sharks on 2024-10-10?",
+    "reference": "The San Jose Sharks' 2024-25 season summary includes a total of 82 games, with a win rate of 0.244. On average, they scored 2.56 goals per game while allowing 3.84 goals against per game. Their home win rate was 0.293, and their away win rate was 0.195. The average rest days between games was 2.32, and they had a back-to-back rate of 0.146. The date range for this summary is from 2024-10-10 to 2025-04-16.",
+    "reference_contexts": [
+      "San Jose Sharks 2024-25 season summary. Games: 82. Win rate: 0.244. Goals for per game: 2.56. Goals against per game: 3.84. Home win rate: 0.293. Away win rate: 0.195. Average rest days: 2.32. Back-to-back rate: 0.146. Date range: 2024-10-10 to 2025-04-16."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What was the win rate of the Carolina Hurricanes during the 2023-24 season?",
+    "reference": "The Carolina Hurricanes had a win rate of 0.634 during the 2023-24 season.",
+    "reference_contexts": [
+      "Carolina Hurricanes 2023-24 season summary. Games: 82. Win rate: 0.634. Goals for per game: 3.40. Goals against per game: 2.63. Home win rate: 0.659. Away win rate: 0.610. Average rest days: 2.32. Back-to-back rate: 0.171. Date range: 2023-10-11 to 2024-04-16."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "How good Utah been in 2023-24 season?",
+    "reference": "Utah Mammoth had a win rate of 0.439 in the 2023-24 season, scoring an average of 3.12 goals per game while allowing 3.34 goals against per game. Their home win rate was 0.537, but they struggled on the road with an away win rate of 0.341.",
+    "reference_contexts": [
+      "Utah Mammoth 2023-24 season summary. Games: 82. Win rate: 0.439. Goals for per game: 3.12. Goals against per game: 3.34. Home win rate: 0.537. Away win rate: 0.341. Average rest days: 2.31. Back-to-back rate: 0.110. Date range: 2023-10-13 to 2024-04-17."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "Wut is the win rate of Vegas Golden Knights?",
+    "reference": "The win rate of the Vegas Golden Knights for the 2023-24 season is 0.549.",
+    "reference_contexts": [
+      "Vegas Golden Knights 2023-24 season summary. Games: 82. Win rate: 0.549. Goals for per game: 3.26. Goals against per game: 2.99. Home win rate: 0.659. Away win rate: 0.439. Average rest days: 2.36. Back-to-back rate: 0.134. Date range: 2023-10-10 to 2024-04-18."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "Can you provide a detailed summary of the Anaheim Ducks' performance during the 2025-26 season, including their win rate, goals per game, and other relevant statistics?",
+    "reference": "During the 2025-26 season, the Anaheim Ducks played a total of 56 games, achieving a win rate of 0.536. They averaged 3.30 goals for per game while allowing 3.48 goals against per game. At home, their win rate was 0.654, whereas their away win rate was significantly lower at 0.433. The team had an average of 2.13 rest days between games and a back-to-back game rate of 0.143. The season spanned from October 9, 2025, to February 3, 2026.",
+    "reference_contexts": [
+      "Anaheim Ducks 2025-26 season summary. Games: 56. Win rate: 0.536. Goals for per game: 3.30. Goals against per game: 3.48. Home win rate: 0.654. Away win rate: 0.433. Average rest days: 2.13. Back-to-back rate: 0.143. Date range: 2025-10-09 to 2026-02-03."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "How good Minnesota Wild do in 2025-26 season?",
+    "reference": "Minnesota Wild have a win rate of 0.586 in the 2025-26 season, scoring an average of 3.38 goals per game while allowing 2.91 goals against per game. Their home win rate is 0.567 and away win rate is 0.607, with an average of 2.07 rest days and a back-to-back rate of 0.172.",
+    "reference_contexts": [
+      "Minnesota Wild 2025-26 season summary. Games: 58. Win rate: 0.586. Goals for per game: 3.38. Goals against per game: 2.91. Home win rate: 0.567. Away win rate: 0.607. Average rest days: 2.07. Back-to-back rate: 0.172. Date range: 2025-10-09 to 2026-02-04."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What happen on 2025-10-09 for Columbus Blue Jackets?",
+    "reference": "On 2025-10-09, the Columbus Blue Jackets began their 2025-26 season, which included a total of 56 games with a win rate of 0.518.",
+    "reference_contexts": [
+      "Columbus Blue Jackets 2025-26 season summary. Games: 56. Win rate: 0.518. Goals for per game: 3.20. Goals against per game: 3.16. Home win rate: 0.556. Away win rate: 0.483. Average rest days: 2.15. Back-to-back rate: 0.196. Date range: 2025-10-09 to 2026-02-04."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What Tampa Bay Lightning stats for games played till 2024-04-17?",
+    "reference": "Tampa Bay Lightning played 10 games with a win rate of 0.500. They scored an average of 3.80 goals per game and allowed 3.20 goals against per game. Their home win rate is 0.500 and away win rate is also 0.500. They had an average of 2.10 rest days and a back-to-back rate of 0.100. The date range for these stats is from 2024-03-30 to 2024-04-17.",
+    "reference_contexts": [
+      "Tampa Bay Lightning 2023-24 last 10 summary. Games: 10. Win rate: 0.500. Goals for per game: 3.80. Goals against per game: 3.20. Home win rate: 0.500. Away win rate: 0.500. Average rest days: 2.10. Back-to-back rate: 0.100. Date range: 2024-03-30 to 2024-04-17."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What was the Utah Mammoth's win rate during the 2025-26 season?",
+    "reference": "The Utah Mammoth had a win rate of 0.700 during the 2025-26 season.",
+    "reference_contexts": [
+      "Utah Mammoth 2025-26 last 10 summary. Games: 10. Win rate: 0.700. Goals for per game: 3.80. Goals against per game: 2.60. Home win rate: 0.833. Away win rate: 0.500. Average rest days: 2.20. Back-to-back rate: 0.100. Date range: 2026-01-15 to 2026-02-04."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What was the Ottawa Senators' win rate leading up to February 5, 2026?",
+    "reference": "The Ottawa Senators had a win rate of 0.600 in their last 10 games leading up to February 5, 2026.",
+    "reference_contexts": [
+      "Ottawa Senators 2025-26 last 10 summary. Games: 10. Win rate: 0.600. Goals for per game: 3.50. Goals against per game: 2.50. Home win rate: 0.750. Away win rate: 0.500. Average rest days: 1.90. Back-to-back rate: 0.300. Date range: 2026-01-18 to 2026-02-05."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What are the recent performance statistics for the Tampa Bay Lightning during the 2025-26 season, specifically focusing on their last 10 games?",
+    "reference": "In their last 10 games during the 2025-26 season, the Tampa Bay Lightning have a win rate of 0.800, averaging 3.90 goals for per game and 2.40 goals against per game. Their home win rate is 1.000, while their away win rate is 0.500. They have an average of 2.30 rest days between games and a back-to-back rate of 0.100. The date range for this summary is from January 16, 2026, to February 5, 2026.",
+    "reference_contexts": [
+      "Tampa Bay Lightning 2025-26 last 10 summary. Games: 10. Win rate: 0.800. Goals for per game: 3.90. Goals against per game: 2.40. Home win rate: 1.000. Away win rate: 0.500. Average rest days: 2.30. Back-to-back rate: 0.100. Date range: 2026-01-16 to 2026-02-05."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "How Blackhawks doin on 2026-01-17?",
+    "reference": "On 2026-01-17, the Chicago Blackhawks had a win rate of 0.300 over their last 10 games, scoring an average of 2.30 goals per game while allowing 3.60 goals against per game. Their home win rate was 0.333 and away win rate was 0.250, with an average of 2.00 rest days between games.",
+    "reference_contexts": [
+      "Chicago Blackhawks 2025-26 last 10 summary. Games: 10. Win rate: 0.300. Goals for per game: 2.30. Goals against per game: 3.60. Home win rate: 0.333. Away win rate: 0.250. Average rest days: 2.00. Back-to-back rate: 0.200. Date range: 2026-01-17 to 2026-02-04."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What is the win rate of the Dallas Stars in the 2023-24 season and how does it compare to their head-to-head performance against the Philadelphia Flyers in the 2024-25 season?",
+    "reference": "The Dallas Stars had a win rate of 0.800 in the 2023-24 season, winning 16 out of their last 20 games. In their head-to-head performance against the Philadelphia Flyers during the 2024-25 season, the Dallas Stars won both games, with a total of 7 goals scored compared to the Flyers' 3 goals.",
+    "reference_contexts": [
+      "<1-hop>\n\nDallas Stars vs Philadelphia Flyers 2024-25 head-to-head season summary. Games: 2. Dallas Stars wins: 2. Philadelphia Flyers wins: 0. Dallas Stars goals for: 7. Philadelphia Flyers goals for: 3. Dallas Stars home games: 1 (wins: 1). Philadelphia Flyers home games: 1 (wins: 0). OT/SO games: 2. Date range: 2025-01-09 to 2025-03-22.",
+      "<2-hop>\n\nDallas Stars 2023-24 last 20 summary. Games: 20. Win rate: 0.800. Goals for per game: 3.80. Goals against per game: 2.30. Home win rate: 0.727. Away win rate: 0.889. Average rest days: 2.40. Back-to-back rate: 0.100. Date range: 2024-03-02 to 2024-04-17.",
+      "<3-hop>\n\nNew Jersey Devils 2024-25 last 10 summary. Games: 10. Win rate: 0.500. Goals for per game: 2.80. Goals against per game: 3.20. Home win rate: 0.333. Away win rate: 0.750. Average rest days: 2.30. Back-to-back rate: 0.200. Date range: 2025-03-26 to 2025-04-16."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What are the recent performance trends of the San Jose Sharks compared to the Dallas Stars, particularly in terms of win rates and goals per game?",
+    "reference": "The recent performance trends show that the San Jose Sharks have struggled significantly in the 2024-25 season, with a win rate of 0.000 over their last 10 games, averaging 2.10 goals for per game and allowing 4.50 goals against per game. In contrast, the Dallas Stars have performed exceptionally well in the 2023-24 season, achieving a win rate of 0.800 over their last 20 games, with an impressive average of 3.80 goals for per game and only 2.30 goals against per game.",
+    "reference_contexts": [
+      "<1-hop>\n\nSan Jose Sharks 2024-25 last 10 summary. Games: 10. Win rate: 0.000. Goals for per game: 2.10. Goals against per game: 4.50. Home win rate: 0.000. Away win rate: 0.000. Average rest days: 1.80. Back-to-back rate: 0.200. Date range: 2025-03-30 to 2025-04-16.",
+      "<2-hop>\n\nDallas Stars 2023-24 last 20 summary. Games: 20. Win rate: 0.800. Goals for per game: 3.80. Goals against per game: 2.30. Home win rate: 0.727. Away win rate: 0.889. Average rest days: 2.40. Back-to-back rate: 0.100. Date range: 2024-03-02 to 2024-04-17."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "How do the recent head-to-head performances of the Los Angeles Kings compare to those of the St. Louis Blues in their last meetings against other teams?",
+    "reference": "In their recent head-to-head performances, the Los Angeles Kings have played against the New York Rangers in their last 8 meetings, winning 4 out of 5 games, with a total of 15 goals scored. In contrast, the St. Louis Blues faced the Washington Capitals in their last 8 meetings, winning only 2 out of 5 games, while conceding 21 goals. This indicates that the Kings have had a stronger performance compared to the Blues in their respective matchups.",
+    "reference_contexts": [
+      "<1-hop>\n\nLos Angeles Kings vs New York Rangers all head-to-head recent (last 8 meetings) summary. Games: 5. Los Angeles Kings wins: 4. New York Rangers wins: 1. Los Angeles Kings goals for: 15. New York Rangers goals for: 10. Los Angeles Kings home games: 3 (wins: 3). New York Rangers home games: 2 (wins: 1). OT/SO games: 5. Date range: 2023-12-10 to 2026-01-20.",
+      "<2-hop>\n\nSt. Louis Blues vs Washington Capitals all head-to-head recent (last 8 meetings) summary. Games: 5. St. Louis Blues wins: 2. Washington Capitals wins: 3. St. Louis Blues goals for: 12. Washington Capitals goals for: 21. St. Louis Blues home games: 2 (wins: 1). Washington Capitals home games: 3 (wins: 2). OT/SO games: 5. Date range: 2024-01-18 to 2025-11-05."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What is the recent performance comparison between the Dallas Stars and Tampa Bay Lightning based on their last meetings and overall win rates?",
+    "reference": "In their last 8 meetings, the Dallas Stars won 2 games while the Tampa Bay Lightning won 4 games, with both teams scoring a total of 16 goals. The Dallas Stars have a win rate of 0.800 in their last 20 games, averaging 3.80 goals for and 2.30 goals against per game. In contrast, the Tampa Bay Lightning's recent performance shows a win rate of 0.500 in their last 10 games, averaging 3.50 goals for and 2.70 goals against per game.",
+    "reference_contexts": [
+      "<1-hop>\n\nDallas Stars 2023-24 last 20 summary. Games: 20. Win rate: 0.800. Goals for per game: 3.80. Goals against per game: 2.30. Home win rate: 0.727. Away win rate: 0.889. Average rest days: 2.40. Back-to-back rate: 0.100. Date range: 2024-03-02 to 2024-04-17.",
+      "<2-hop>\n\nDallas Stars vs Tampa Bay Lightning all head-to-head recent (last 8 meetings) summary. Games: 6. Dallas Stars wins: 2. Tampa Bay Lightning wins: 4. Dallas Stars goals for: 16. Tampa Bay Lightning goals for: 16. Dallas Stars home games: 3 (wins: 1). Tampa Bay Lightning home games: 3 (wins: 2). OT/SO games: 6. Date range: 2023-12-02 to 2026-01-18.",
+      "<3-hop>\n\nTampa Bay Lightning 2024-25 last 10 summary. Games: 10. Win rate: 0.500. Goals for per game: 3.50. Goals against per game: 2.70. Home win rate: 0.600. Away win rate: 0.400. Average rest days: 2.10. Back-to-back rate: 0.000. Date range: 2025-03-29 to 2025-04-17."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "How do the recent performances of the Dallas Stars compare to those of the New Jersey Devils based on their last 20 games?",
+    "reference": "In their last 20 games, the Dallas Stars have demonstrated a strong performance with a win rate of 0.800, averaging 3.80 goals for per game and allowing only 2.30 goals against per game. In contrast, the New Jersey Devils have struggled, achieving a win rate of 0.450, with an average of 2.80 goals for per game and 3.40 goals against per game. This stark difference highlights the Dallas Stars' superior performance compared to the New Jersey Devils during the same period.",
+    "reference_contexts": [
+      "<1-hop>\n\nDallas Stars 2023-24 last 20 summary. Games: 20. Win rate: 0.800. Goals for per game: 3.80. Goals against per game: 2.30. Home win rate: 0.727. Away win rate: 0.889. Average rest days: 2.40. Back-to-back rate: 0.100. Date range: 2024-03-02 to 2024-04-17.",
+      "<2-hop>\n\nNew Jersey Devils 2024-25 last 20 summary. Games: 20. Win rate: 0.450. Goals for per game: 2.80. Goals against per game: 3.40. Home win rate: 0.333. Away win rate: 0.625. Average rest days: 2.25. Back-to-back rate: 0.100. Date range: 2025-03-04 to 2025-04-16.",
+      "<3-hop>\n\nDallas Stars vs Philadelphia Flyers 2024-25 head-to-head season summary. Games: 2. Dallas Stars wins: 2. Philadelphia Flyers wins: 0. Dallas Stars goals for: 7. Philadelphia Flyers goals for: 3. Dallas Stars home games: 1 (wins: 1). Philadelphia Flyers home games: 1 (wins: 0). OT/SO games: 2. Date range: 2025-01-09 to 2025-03-22."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "How do the Dallas Stars' performance metrics compare to the Vegas Golden Knights' metrics over their last 20 games, especially in terms of win rate and goals against per game?",
+    "reference": "The Dallas Stars have a win rate of 0.800 over their last 20 games, with an average of 2.30 goals against per game. In contrast, the Vegas Golden Knights have a win rate of 0.500 and allow an average of 3.20 goals against per game. This indicates that the Stars have been significantly more successful and defensively stronger compared to the Golden Knights in their recent performances.",
+    "reference_contexts": [
+      "<1-hop>\n\nDallas Stars 2023-24 last 20 summary. Games: 20. Win rate: 0.800. Goals for per game: 3.80. Goals against per game: 2.30. Home win rate: 0.727. Away win rate: 0.889. Average rest days: 2.40. Back-to-back rate: 0.100. Date range: 2024-03-02 to 2024-04-17.",
+      "<2-hop>\n\nVegas Golden Knights 2025-26 last 20 summary. Games: 20. Win rate: 0.500. Goals for per game: 3.70. Goals against per game: 3.20. Home win rate: 0.600. Away win rate: 0.400. Average rest days: 1.90. Back-to-back rate: 0.250. Date range: 2025-12-31 to 2026-02-05."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "How do the head-to-head performances of the Buffalo Sabres against the Nashville Predators compare to the Boston Bruins against the Pittsburgh Penguins in the 2024-25 season?",
+    "reference": "In the 2024-25 season, the Buffalo Sabres faced the Nashville Predators in two games, with each team winning one game. The Sabres scored a total of 8 goals while the Predators scored 9 goals. In contrast, the Boston Bruins played three games against the Pittsburgh Penguins, winning two and losing one. The Bruins scored 8 goals, while the Penguins managed 5 goals. This indicates that while both the Sabres and Bruins had similar goal totals, the Bruins had a better win ratio in their head-to-head matchups.",
+    "reference_contexts": [
+      "<1-hop>\n\nBuffalo Sabres vs Nashville Predators 2024-25 head-to-head season summary. Games: 2. Buffalo Sabres wins: 1. Nashville Predators wins: 1. Buffalo Sabres goals for: 8. Nashville Predators goals for: 9. Buffalo Sabres home games: 1 (wins: 1). Nashville Predators home games: 1 (wins: 1). OT/SO games: 2. Date range: 2025-01-31 to 2025-02-08.",
+      "<2-hop>\n\nBoston Bruins vs Pittsburgh Penguins 2024-25 head-to-head season summary. Games: 3. Boston Bruins wins: 2. Pittsburgh Penguins wins: 1. Boston Bruins goals for: 8. Pittsburgh Penguins goals for: 5. Boston Bruins home games: 1 (wins: 0). Pittsburgh Penguins home games: 2 (wins: 0). OT/SO games: 3. Date range: 2024-11-29 to 2025-04-13."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "How many games did Boston Bruins win against Pittsburgh Penguins and how does that compare to St. Louis Blues wins against Washington Capitals in their recent matchups?",
+    "reference": "Boston Bruins won 2 out of 3 games against Pittsburgh Penguins in their head-to-head season summary. In contrast, St. Louis Blues won 2 out of 5 games against Washington Capitals in their recent matchups. This shows that the Bruins had a higher win percentage against the Penguins compared to the Blues against the Capitals.",
+    "reference_contexts": [
+      "<1-hop>\n\nBoston Bruins vs Pittsburgh Penguins 2024-25 head-to-head season summary. Games: 3. Boston Bruins wins: 2. Pittsburgh Penguins wins: 1. Boston Bruins goals for: 8. Pittsburgh Penguins goals for: 5. Boston Bruins home games: 1 (wins: 0). Pittsburgh Penguins home games: 2 (wins: 0). OT/SO games: 3. Date range: 2024-11-29 to 2025-04-13.",
+      "<2-hop>\n\nSt. Louis Blues vs Washington Capitals all head-to-head recent (last 8 meetings) summary. Games: 5. St. Louis Blues wins: 2. Washington Capitals wins: 3. St. Louis Blues goals for: 12. Washington Capitals goals for: 21. St. Louis Blues home games: 2 (wins: 1). Washington Capitals home games: 3 (wins: 2). OT/SO games: 5. Date range: 2024-01-18 to 2025-11-05."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "How Tampa Bay Lightning compare to Dallas Stars in win rate and goals for per game?",
+    "reference": "Tampa Bay Lightning have a win rate of 0.500 and score an average of 3.50 goals per game, while Dallas Stars have a significantly higher win rate of 0.800 and score an average of 3.80 goals per game.",
     "reference_contexts": [
       "<1-hop>\n\nTampa Bay Lightning 2024-25 last 10 summary. Games: 10. Win rate: 0.500. Goals for per game: 3.50. Goals against per game: 2.70. Home win rate: 0.600. Away win rate: 0.400. Average rest days: 2.10. Back-to-back rate: 0.000. Date range: 2025-03-29 to 2025-04-17.",
-      "<2-hop>\n\nVegas Golden Knights 2023-24 season summary. Games: 82. Win rate: 0.549. Goals for per game: 3.26. Goals against per game: 2.99. Home win rate: 0.659. Away win rate: 0.439. Average rest days: 2.36. Back-to-back rate: 0.134. Date range: 2023-10-10 to 2024-04-18."
+      "<2-hop>\n\nDallas Stars 2023-24 last 20 summary. Games: 20. Win rate: 0.800. Goals for per game: 3.80. Goals against per game: 2.30. Home win rate: 0.727. Away win rate: 0.889. Average rest days: 2.40. Back-to-back rate: 0.100. Date range: 2024-03-02 to 2024-04-17."
     ],
     "source": "synthetic"
   },
   {
-    "user_input": "How many games did Ottawa Senators win against Edmonton Oilers and what was their performance against Calgary Flames?",
-    "reference": "Ottawa Senators won 1 game against Edmonton Oilers in their last 8 meetings, while Calgary Flames won 1 game against Edmonton Oilers in their 2024-25 head-to-head season summary.",
+    "user_input": "How many games did Ottawa Senators win against Edmonton Oilers in their last meetings and how does that compare to their win against Tampa Bay Lightning?",
+    "reference": "In their last meetings, Ottawa Senators won 1 game against Edmonton Oilers out of 5 games played. In contrast, Ottawa Senators won 1 game against Tampa Bay Lightning in their only head-to-head matchup for the 2025-26 season.",
     "reference_contexts": [
-      "<1-hop>\n\nCalgary Flames vs Edmonton Oilers 2024-25 head-to-head season summary. Games: 3. Calgary Flames wins: 1. Edmonton Oilers wins: 2. Calgary Flames goals for: 8. Edmonton Oilers goals for: 8. Calgary Flames home games: 1 (wins: 0). Edmonton Oilers home games: 2 (wins: 1). OT/SO games: 3. Date range: 2024-10-13 to 2025-03-29.",
-      "<2-hop>\n\nEdmonton Oilers vs Ottawa Senators all head-to-head recent (last 8 meetings) summary. Games: 5. Edmonton Oilers wins: 4. Ottawa Senators wins: 1. Edmonton Oilers goals for: 17. Ottawa Senators goals for: 11. Edmonton Oilers home games: 2 (wins: 2). Ottawa Senators home games: 3 (wins: 1). OT/SO games: 5. Date range: 2024-01-06 to 2025-10-21.",
-      "<3-hop>\n\nOttawa Senators vs Tampa Bay Lightning 2025-26 head-to-head season summary. Games: 1. Ottawa Senators wins: 1. Tampa Bay Lightning wins: 0. Ottawa Senators goals for: 5. Tampa Bay Lightning goals for: 4. Ottawa Senators home games: 0 (wins: 0). Tampa Bay Lightning home games: 1 (wins: 0). OT/SO games: 1. Date range: 2025-10-09 to 2025-10-09."
+      "<1-hop>\n\nOttawa Senators vs Tampa Bay Lightning 2025-26 head-to-head season summary. Games: 1. Ottawa Senators wins: 1. Tampa Bay Lightning wins: 0. Ottawa Senators goals for: 5. Tampa Bay Lightning goals for: 4. Ottawa Senators home games: 0 (wins: 0). Tampa Bay Lightning home games: 1 (wins: 0). OT/SO games: 1. Date range: 2025-10-09 to 2025-10-09.",
+      "<2-hop>\n\nEdmonton Oilers vs Ottawa Senators all head-to-head recent (last 8 meetings) summary. Games: 5. Edmonton Oilers wins: 4. Ottawa Senators wins: 1. Edmonton Oilers goals for: 17. Ottawa Senators goals for: 11. Edmonton Oilers home games: 2 (wins: 2). Ottawa Senators home games: 3 (wins: 1). OT/SO games: 5. Date range: 2024-01-06 to 2025-10-21."
     ],
     "source": "synthetic"
   },
   {
-    "user_input": "Calgry Flames vs Edmnton Oilers 2024-10-13 head-to-head record?",
-    "reference": "In the head-to-head season summary for the Calgary Flames vs Edmonton Oilers, the teams played 3 games. The Calgary Flames won 1 game, while the Edmonton Oilers won 2 games. Both teams scored a total of 8 goals each. The Calgary Flames played 1 home game but did not win, while the Edmonton Oilers played 2 home games and won 1. The date range for these games is from 2024-10-13 to 2025-03-29.",
+    "user_input": "How does the Dallas Stars performance compare to the Toronto Maple Leafs based on their last 20 games?",
+    "reference": "The Dallas Stars had a win rate of 0.800 with an average of 3.80 goals for per game and 2.30 goals against per game over their last 20 games. In contrast, the Toronto Maple Leafs had a win rate of 0.700, scoring an average of 3.50 goals for per game while allowing 2.55 goals against per game in their last 20 games. This shows that the Stars had a better win rate and a stronger goal differential compared to the Maple Leafs.",
     "reference_contexts": [
-      "<1-hop>\n\nCalgary Flames vs Edmonton Oilers 2024-25 head-to-head season summary. Games: 3. Calgary Flames wins: 1. Edmonton Oilers wins: 2. Calgary Flames goals for: 8. Edmonton Oilers goals for: 8. Calgary Flames home games: 1 (wins: 0). Edmonton Oilers home games: 2 (wins: 1). OT/SO games: 3. Date range: 2024-10-13 to 2025-03-29."
+      "<1-hop>\n\nDallas Stars 2023-24 last 20 summary. Games: 20. Win rate: 0.800. Goals for per game: 3.80. Goals against per game: 2.30. Home win rate: 0.727. Away win rate: 0.889. Average rest days: 2.40. Back-to-back rate: 0.100. Date range: 2024-03-02 to 2024-04-17.",
+      "<2-hop>\n\nToronto Maple Leafs 2024-25 last 20 summary. Games: 20. Win rate: 0.700. Goals for per game: 3.50. Goals against per game: 2.55. Home win rate: 0.778. Away win rate: 0.636. Average rest days: 2.15. Back-to-back rate: 0.200. Date range: 2025-03-08 to 2025-04-17."
     ],
     "source": "synthetic"
   },
   {
-    "user_input": "So like, what the head-to-head record between Carolina Hurricanes and Los Angeles Kings say for their last 8 games, and how many goals they scored in that time, and what about their wins at home, like, you know, since 2023-10-14?",
-    "reference": "In the last 8 meetings between the Carolina Hurricanes and the Los Angeles Kings, both teams have won 3 games each. The Hurricanes scored a total of 19 goals while the Kings scored 26 goals. When looking at home games, both teams played 3 games at home, with each team winning 1 of those games. This data is relevant from the date range of 2023-10-14 to 2026-02-01.",
+    "user_input": "Considering the recent performance of the Dallas Stars and the New Jersey Devils, how do their win rates and goals per game compare, particularly in the context of their respective last 20 and last 10 games?",
+    "reference": "The Dallas Stars have demonstrated a strong performance in their last 20 games with a win rate of 0.800 and an average of 3.80 goals for per game, while allowing only 2.30 goals against per game. In contrast, the New Jersey Devils, in their last 10 games, have a win rate of 0.500, scoring an average of 2.80 goals per game but conceding 3.20 goals per game. This indicates that the Stars have been significantly more successful in both winning games and maintaining a favorable goal differential compared to the Devils.",
     "reference_contexts": [
-      "<1-hop>\n\nCarolina Hurricanes vs Los Angeles Kings all head-to-head recent (last 8 meetings) summary. Games: 6. Carolina Hurricanes wins: 3. Los Angeles Kings wins: 3. Carolina Hurricanes goals for: 19. Los Angeles Kings goals for: 26. Carolina Hurricanes home games: 3 (wins: 1). Los Angeles Kings home games: 3 (wins: 1). OT/SO games: 6. Date range: 2023-10-14 to 2026-02-01."
+      "<1-hop>\n\nDallas Stars 2023-24 last 20 summary. Games: 20. Win rate: 0.800. Goals for per game: 3.80. Goals against per game: 2.30. Home win rate: 0.727. Away win rate: 0.889. Average rest days: 2.40. Back-to-back rate: 0.100. Date range: 2024-03-02 to 2024-04-17.",
+      "<2-hop>\n\nNew Jersey Devils 2024-25 last 10 summary. Games: 10. Win rate: 0.500. Goals for per game: 2.80. Goals against per game: 3.20. Home win rate: 0.333. Away win rate: 0.750. Average rest days: 2.30. Back-to-back rate: 0.200. Date range: 2025-03-26 to 2025-04-16."
     ],
     "source": "synthetic"
   },
   {
-    "user_input": "What the Florida Panthers stats for last 10 games before 2024-03-28, like win rate and goals for per game?",
-    "reference": "The Florida Panthers had a win rate of 0.600 in their last 10 games before 2024-03-28, scoring an average of 3.40 goals for per game while allowing 2.30 goals against per game. Their home win rate was 0.833, but their away win rate was only 0.250, with an average of 2.10 rest days between games and a back-to-back rate of 0.100.",
+    "user_input": "What are the recent performance statistics of the Dallas Stars in the 2023-24 season, and how do they compare to their head-to-head matchups against the Tampa Bay Lightning in their last eight meetings?",
+    "reference": "In the 2023-24 season, the Dallas Stars have played 20 games with a win rate of 0.800, averaging 3.80 goals for per game and 2.30 goals against per game. Their home win rate is 0.727, while their away win rate is 0.889. In contrast, in their last eight meetings against the Tampa Bay Lightning, the Dallas Stars have won 2 out of 6 games, with both teams scoring a total of 16 goals. The Stars have won 1 out of 3 home games against the Lightning, who have won 2 out of their 3 home games against the Stars. The matchups have been competitive, with 6 of the games going to overtime or shootouts.",
     "reference_contexts": [
-      "<1-hop>\n\nFlorida Panthers 2023-24 last 10 summary. Games: 10. Win rate: 0.600. Goals for per game: 3.40. Goals against per game: 2.30. Home win rate: 0.833. Away win rate: 0.250. Average rest days: 2.10. Back-to-back rate: 0.100. Date range: 2024-03-28 to 2024-04-16."
+      "<1-hop>\n\nDallas Stars 2023-24 last 20 summary. Games: 20. Win rate: 0.800. Goals for per game: 3.80. Goals against per game: 2.30. Home win rate: 0.727. Away win rate: 0.889. Average rest days: 2.40. Back-to-back rate: 0.100. Date range: 2024-03-02 to 2024-04-17.",
+      "<2-hop>\n\nDallas Stars vs Tampa Bay Lightning all head-to-head recent (last 8 meetings) summary. Games: 6. Dallas Stars wins: 2. Tampa Bay Lightning wins: 4. Dallas Stars goals for: 16. Tampa Bay Lightning goals for: 16. Dallas Stars home games: 3 (wins: 1). Tampa Bay Lightning home games: 3 (wins: 2). OT/SO games: 6. Date range: 2023-12-02 to 2026-01-18."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "Wut is the Minnesota Wilds win rate and goals for per game on 2023-10-12?",
+    "reference": "The Minnesota Wild's win rate for the 2023-24 season is 0.476, and they score an average of 3.06 goals per game.",
+    "reference_contexts": [
+      "<1-hop>\n\nMinnesota Wild 2023-24 season summary. Games: 82. Win rate: 0.476. Goals for per game: 3.06. Goals against per game: 3.21. Home win rate: 0.488. Away win rate: 0.463. Average rest days: 2.33. Back-to-back rate: 0.183. Date range: 2023-10-12 to 2024-04-18."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What the New York Islanders win rate and goals for per game in the 2023-24 season, and how many games they play?",
+    "reference": "The New York Islanders have a win rate of 0.476 and score an average of 3.00 goals for per game in the 2023-24 season, during which they play a total of 82 games.",
+    "reference_contexts": [
+      "<1-hop>\n\nNew York Islanders 2023-24 season summary. Games: 82. Win rate: 0.476. Goals for per game: 3.00. Goals against per game: 3.21. Home win rate: 0.512. Away win rate: 0.439. Average rest days: 2.30. Back-to-back rate: 0.122. Date range: 2023-10-14 to 2024-04-17."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What was the New Jersey Devils' performance summary leading up to the date of March 4, 2025, including their win rate and goals statistics?",
+    "reference": "Leading up to March 4, 2025, the New Jersey Devils had a performance summary over their last 20 games with a win rate of 0.450. They averaged 2.80 goals for per game while allowing 3.40 goals against per game. Their home win rate was 0.333, and their away win rate was 0.625, with an average of 2.25 rest days between games and a back-to-back rate of 0.100.",
+    "reference_contexts": [
+      "<1-hop>\n\nNew Jersey Devils 2024-25 last 20 summary. Games: 20. Win rate: 0.450. Goals for per game: 2.80. Goals against per game: 3.40. Home win rate: 0.333. Away win rate: 0.625. Average rest days: 2.25. Back-to-back rate: 0.100. Date range: 2025-03-04 to 2025-04-16."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What the head-to-head record between Los Angeles Kings and New York Rangers say about their performance up to 2023-12-10?",
+    "reference": "The head-to-head record between the Los Angeles Kings and New York Rangers shows that in their last 8 meetings, the Kings have won 4 games while the Rangers have only won 1. The Kings scored a total of 15 goals compared to the Rangers' 10 goals. Additionally, the Kings have won all 3 of their home games against the Rangers, while the Rangers have only won 1 out of 2 home games against the Kings. This performance context indicates a strong advantage for the Kings leading up to 2023-12-10.",
+    "reference_contexts": [
+      "<1-hop>\n\nLos Angeles Kings vs New York Rangers all head-to-head recent (last 8 meetings) summary. Games: 5. Los Angeles Kings wins: 4. New York Rangers wins: 1. Los Angeles Kings goals for: 15. New York Rangers goals for: 10. Los Angeles Kings home games: 3 (wins: 3). New York Rangers home games: 2 (wins: 1). OT/SO games: 5. Date range: 2023-12-10 to 2026-01-20."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What was the Minnesota Wild's performance summary for the 2025-10-09 season?",
+    "reference": "The Minnesota Wild's performance summary for the 2025-26 season, starting from 2025-10-09, includes a total of 58 games played with a win rate of 0.586. They averaged 3.38 goals for per game and 2.91 goals against per game. Their home win rate was 0.567, while their away win rate was 0.607. The team had an average of 2.07 rest days and a back-to-back game rate of 0.172.",
+    "reference_contexts": [
+      "<1-hop>\n\nMinnesota Wild 2025-26 season summary. Games: 58. Win rate: 0.586. Goals for per game: 3.38. Goals against per game: 2.91. Home win rate: 0.567. Away win rate: 0.607. Average rest days: 2.07. Back-to-back rate: 0.172. Date range: 2025-10-09 to 2026-02-04."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What is the head-to-head record between the St. Louis Blues and Washington Capitals in their last 8 meetings, and how does this relate to their performance on January 18, 2024?",
+    "reference": "In their last 8 meetings, the St. Louis Blues have won 2 games while the Washington Capitals have won 3 games. The total goals scored by the St. Louis Blues in these matchups is 12, whereas the Washington Capitals have scored 21 goals. Additionally, the St. Louis Blues have played 2 home games against the Capitals, winning 1, while the Capitals have played 3 home games, winning 2. This head-to-head record is relevant for analyzing their performance on January 18, 2024, as it provides insight into their recent form and competitive dynamics.",
+    "reference_contexts": [
+      "<1-hop>\n\nSt. Louis Blues vs Washington Capitals all head-to-head recent (last 8 meetings) summary. Games: 5. St. Louis Blues wins: 2. Washington Capitals wins: 3. St. Louis Blues goals for: 12. Washington Capitals goals for: 21. St. Louis Blues home games: 2 (wins: 1). Washington Capitals home games: 3 (wins: 2). OT/SO games: 5. Date range: 2024-01-18 to 2025-11-05."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What is the win rate of the Nashville Predators as of March 5, 2024?",
+    "reference": "As of March 5, 2024, the Nashville Predators have a win rate of 0.600 based on their last 20 games.",
+    "reference_contexts": [
+      "<1-hop>\n\nNashville Predators 2023-24 last 20 summary. Games: 20. Win rate: 0.600. Goals for per game: 3.50. Goals against per game: 2.90. Home win rate: 0.667. Away win rate: 0.545. Average rest days: 2.20. Back-to-back rate: 0.150. Date range: 2024-03-05 to 2024-04-15."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What the Winnipeg Jets stats for the 2023-24 season say about their performance from 2023-10-11 to 2024-04-18, like win rate and goals for and against?",
+    "reference": "The Winnipeg Jets' stats for the 2023-24 season indicate a win rate of 0.634 over the course of 82 games. They scored an average of 3.16 goals per game while allowing 2.43 goals against per game. Their home win rate was 0.659, and their away win rate was 0.610. Additionally, they had an average of 2.35 rest days between games and a back-to-back game rate of 0.098 during the season from 2023-10-11 to 2024-04-18.",
+    "reference_contexts": [
+      "<1-hop>\n\nWinnipeg Jets 2023-24 season summary. Games: 82. Win rate: 0.634. Goals for per game: 3.16. Goals against per game: 2.43. Home win rate: 0.659. Away win rate: 0.610. Average rest days: 2.35. Back-to-back rate: 0.098. Date range: 2023-10-11 to 2024-04-18."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What was the head-to-head performance of the Dallas Stars against the Philadelphia Flyers during the 2024-25 NHL season leading up to March 22, 2025, including details on wins, goals scored, and game locations?",
+    "reference": "During the 2024-25 NHL season leading up to March 22, 2025, the Dallas Stars faced the Philadelphia Flyers in two games, winning both. The Dallas Stars scored a total of 7 goals, while the Philadelphia Flyers managed only 3 goals. The Stars played one home game, winning it, while the Flyers also played one home game but did not secure a win. Additionally, both teams participated in two overtime or shootout games during this period.",
+    "reference_contexts": [
+      "<1-hop>\n\nDallas Stars vs Philadelphia Flyers 2024-25 head-to-head season summary. Games: 2. Dallas Stars wins: 2. Philadelphia Flyers wins: 0. Dallas Stars goals for: 7. Philadelphia Flyers goals for: 3. Dallas Stars home games: 1 (wins: 1). Philadelphia Flyers home games: 1 (wins: 0). OT/SO games: 2. Date range: 2025-01-09 to 2025-03-22."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What is the performance summary of the Edmonton Oilers leading up to the date of March 10, 2024, including their win rate, goals for and against per game, and home and away win rates?",
+    "reference": "As of March 10, 2024, the Edmonton Oilers have played 20 games with a win rate of 0.550. They average 3.80 goals for per game while allowing 2.85 goals against per game. Their home win rate stands at 0.727, whereas their away win rate is significantly lower at 0.333. Additionally, they have an average of 2.00 rest days between games and a back-to-back game rate of 0.250.",
+    "reference_contexts": [
+      "<1-hop>\n\nEdmonton Oilers 2023-24 last 20 summary. Games: 20. Win rate: 0.550. Goals for per game: 3.80. Goals against per game: 2.85. Home win rate: 0.727. Away win rate: 0.333. Average rest days: 2.00. Back-to-back rate: 0.250. Date range: 2024-03-10 to 2024-04-18."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What are the head-to-head trends between the Dallas Stars and Tampa Bay Lightning in their last 8 meetings leading up to December 2, 2023, and how do their recent performances compare in terms of wins and goals scored?",
+    "reference": "In their last 8 meetings leading up to December 2, 2023, the Dallas Stars faced the Tampa Bay Lightning with the Stars winning 2 games and the Lightning winning 4 games. Both teams scored a total of 16 goals during these encounters. The Dallas Stars played 3 home games, winning 1, while the Tampa Bay Lightning also played 3 home games, winning 2. This summary indicates that the Lightning have had a stronger performance in their recent matchups against the Stars.",
+    "reference_contexts": [
+      "<1-hop>\n\nDallas Stars vs Tampa Bay Lightning all head-to-head recent (last 8 meetings) summary. Games: 6. Dallas Stars wins: 2. Tampa Bay Lightning wins: 4. Dallas Stars goals for: 16. Tampa Bay Lightning goals for: 16. Dallas Stars home games: 3 (wins: 1). Tampa Bay Lightning home games: 3 (wins: 2). OT/SO games: 6. Date range: 2023-12-02 to 2026-01-18."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What is the head-to-head summary of the Philadelphia Flyers and San Jose Sharks in their last 8 meetings leading up to the date of 2025-12-09, and how do their recent performances compare in terms of wins and goals scored?",
+    "reference": "In their last 8 meetings leading up to the date of 2025-12-09, the Philadelphia Flyers have won 4 games while the San Jose Sharks have won only 1. The Flyers scored a total of 16 goals, whereas the Sharks managed to score only 8 goals. Additionally, the Flyers have a perfect record at home with 3 wins in their home games, while the Sharks have won 1 out of 2 home games. This summary indicates a strong performance by the Flyers in their recent matchups against the Sharks.",
+    "reference_contexts": [
+      "<1-hop>\n\nPhiladelphia Flyers vs San Jose Sharks all head-to-head recent (last 8 meetings) summary. Games: 5. Philadelphia Flyers wins: 4. San Jose Sharks wins: 1. Philadelphia Flyers goals for: 16. San Jose Sharks goals for: 8. Philadelphia Flyers home games: 3 (wins: 3). San Jose Sharks home games: 2 (wins: 1). OT/SO games: 5. Date range: 2023-11-07 to 2025-12-09."
+    ],
+    "source": "synthetic"
+  },
+  {
+    "user_input": "What is the win rate and average rest days for the St. Louis Blues leading up to the date of 2024-03-07?",
+    "reference": "Leading up to the date of 2024-03-07, the St. Louis Blues had a win rate of 0.550 over their last 20 games and an average of 2.15 rest days.",
+    "reference_contexts": [
+      "<1-hop>\n\nSt. Louis Blues 2023-24 last 20 summary. Games: 20. Win rate: 0.550. Goals for per game: 3.05. Goals against per game: 2.95. Home win rate: 0.636. Away win rate: 0.444. Average rest days: 2.15. Back-to-back rate: 0.100. Date range: 2024-03-07 to 2024-04-17."
     ],
     "source": "synthetic"
   }
