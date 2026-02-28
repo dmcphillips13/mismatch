@@ -14,4 +14,9 @@ dependencies = [
   "langgraph",
   "langsmith",
   "openai",
+  "ragas",
+  "langchain-openai",
+  "langchain-qdrant",
+  "langchain-cohere",
+  "openevals",
 ]
