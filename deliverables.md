@@ -143,11 +143,26 @@
 2. Implement the advanced retrieval technique on your application.
 3. How does the performance compare to your original RAG application?  Test the fine-tuned embedding model using the RAGAS frameworks to quantify any improvements.  Provide results in a table.
 
-1. <!-- TODO -->
+1. I chose Cohere reranking (rerank-english-v3.5) for my advanced retrieval technique. The baseline retrieves 6 docs by cosine similarity, which works well for single-team queries but struggles on multi-hop questions where the relevant docs aren't necessarily the closest embeddings. Reranking retrieves a wider initial set (10 docs) and then rescores them by semantic relevance to the query, prioritizing the most useful docs rather than just the nearest vectors.
 
-2. <!-- TODO -->
+2. The implementation uses LangChain's `ContextualCompressionRetriever` wrapping the existing Qdrant retriever. It fetches 10 candidates via dense cosine search, then Cohere reranks them and returns the top 5. This is integrated into the eval pipeline as a separate `build_reranked_rag_chain()` that shares the same generation step as baseline.
 
-3. <!-- TODO -->
+3. Results across 51 examples:
+
+   | Metric                | Baseline | Reranked | Delta   |
+   |-----------------------|----------|----------|---------|
+   | Faithfulness          | 0.8815   | 0.8694   | -0.0121 |
+   | Context Precision     | 0.5859   | 0.6693   | +0.0833 |
+   | Context Recall        | 0.7271   | 0.7578   | +0.0307 |
+   | Context Entity Recall | 0.3333   | 0.3558   | +0.0225 |
+   | Answer Relevancy      | 0.6032   | 0.6528   | +0.0496 |
+   | Factual Correctness   | 0.4092   | 0.4278   | +0.0186 |
+   | Avg Latency           | 2,571ms  | 6,335ms  | +3,764ms |
+   | Avg Cost / Query      | $0.0002  | $0.0001  | ~$0     |
+
+   Reranking improved five of the six metrics. Context precision saw the largest gain (+0.0833), due to Cohere's reranking pushing more relevant documents to the top of the results and giving the LLM better context to work with. Answer relevancy (+0.0496), context recall (+0.0307), context entity recall (+0.0225), and factual correctness (+0.0186) all improved as well.
+
+   Faithfulness dipped slightly (-0.0121) but remained high at 0.87. Latency (+3,764ms) took a hit due to the extra Cohere API call. Cost per query stayed roughly the same due to rerank passing 5 focused docs to the LLM instead of 6, saving on generation tokens and roughly offsetting it.
 
 
 ### Task 7: Next Steps

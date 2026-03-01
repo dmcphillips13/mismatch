@@ -5,17 +5,18 @@
   "rerank_top_n": 5,
   "num_examples": 51,
   "metrics": {
-    "faithfulness": 0.9113759443171208,
+    "faithfulness": 0.8694410410729196,
+    "context_precision": 0.6692810456948528,
     "context_recall": 0.757843137254902,
-    "context_entity_recall": 0.35989516930035775,
-    "answer_relevancy": 0.6720143878082833,
-    "factual_correctness": 0.39862745098039215
+    "context_entity_recall": 0.3558102020183362,
+    "answer_relevancy": 0.6528060742842094,
+    "factual_correctness": 0.42784313725490203
   },
   "performance": {
-    "avg_latency_ms": 6392.54,
-    "p95_latency_ms": 29615.25,
-    "avg_cost_usd": 0.00015213529411764706,
-    "total_cost_usd": 0.0077589,
+    "avg_latency_ms": 6335.36,
+    "p95_latency_ms": 29920.96,
+    "avg_cost_usd": 0.00014817058823529412,
+    "total_cost_usd": 0.0075567,
     "sample_count": 51
   }
 }
