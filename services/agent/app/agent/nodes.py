@@ -203,17 +203,124 @@ def compute_edges(state: AgentState) -> dict[str, Any]:
     except Exception as exc:
         logger.warning("NHL score fetch failed: %s", exc, exc_info=True)
 
+    # NHL-as-source-of-truth: for mentioned teams, always fetch the real
+    # next game from the NHL API and reconcile with existing betting edges.
+    teams = list(state.get("teams_mentioned", []))
+    logger.info("[SCHED] teams_mentioned from state: %s", teams)
+
+    # Fallback: if the intent classifier didn't extract teams, scan the
+    # query for known abbreviations (e.g. "CBJ", "NYR") so schedule
+    # queries like "What is CBJ's next game?" still work.
+    if not teams:
+        for word in query.split():
+            cleaned = word.strip("'s?.!,").upper()
+            resolved = normalize_team_name(cleaned)
+            if resolved != cleaned and team_name_to_abbrev(resolved):
+                teams.append(resolved)
+        logger.info("[SCHED] fallback extracted teams: %s", teams)
+    if teams:
+        for team in teams:
+            abbrev = team_name_to_abbrev(team)
+            if not abbrev:
+                continue
+            try:
+                schedule = NHLScoreClient().fetch_team_schedule(abbrev, limit=1)
+                if not schedule:
+                    continue
+                gs = schedule[0]
+                nhl_home = normalize_team_name(gs.home_abbrev)
+                nhl_away = normalize_team_name(gs.away_abbrev)
+                nhl_pair = {nhl_home.lower(), nhl_away.lower()}
+                nhl_date = gs.start_time_utc[:10] if gs.start_time_utc else ""
+
+                # Find existing edge that matches this game by team pair
+                matched_idx = None
+                for i, edge in enumerate(matchup_edges):
+                    edge_pair = {
+                        edge.get("home_team", "").lower(),
+                        edge.get("away_team", "").lower(),
+                    }
+                    if edge_pair == nhl_pair:
+                        matched_idx = i
+                        break
+
+                logger.info(
+                    "[SCHED] NHL says next game: %s @ %s on %s | matched_idx=%s",
+                    nhl_away, nhl_home, nhl_date, matched_idx,
+                )
+                if matched_idx is not None:
+                    # Edge exists — fix date to NHL value and attach game_status
+                    matchup_edges[matched_idx]["game_date"] = nhl_date
+                    matchup_edges[matched_idx]["game_status"] = asdict(gs)
+                    # Remove OTHER NO_ODDS edges for this team — they're for
+                    # later games, not the next one, and confuse the LLM.
+                    matchup_edges = [
+                        e for i, e in enumerate(matchup_edges)
+                        if i == matched_idx
+                        or e.get("recommendation") != "NO_ODDS"
+                        or (
+                            e.get("home_team", "").lower() != team.lower()
+                            and e.get("away_team", "").lower() != team.lower()
+                        )
+                    ]
+                else:
+                    # No matching edge — remove stale NO_ODDS edges for this
+                    # team and add a fresh SCHEDULE edge from the NHL API.
+                    before = len(matchup_edges)
+                    matchup_edges = [
+                        e for e in matchup_edges
+                        if not (
+                            e.get("recommendation") == "NO_ODDS"
+                            and (
+                                e.get("home_team", "").lower() == team.lower()
+                                or e.get("away_team", "").lower() == team.lower()
+                            )
+                        )
+                    ]
+                    logger.info(
+                        "[SCHED] removed %d stale NO_ODDS edges, adding SCHEDULE",
+                        before - len(matchup_edges),
+                    )
+                    matchup_edges.append({
+                        "home_team": nhl_home,
+                        "away_team": nhl_away,
+                        "home_fair_prob": 0.0,
+                        "away_fair_prob": 0.0,
+                        "kalshi_home_prob": None,
+                        "kalshi_away_prob": None,
+                        "home_edge": None,
+                        "away_edge": None,
+                        "recommendation": "SCHEDULE",
+                        "game_date": nhl_date,
+                        "game_status": asdict(gs),
+                    })
+            except Exception as exc:
+                logger.warning("Schedule fetch failed for %s: %s", team, exc)
+
     # Tavily gating: search if any BET recommendation or explanation intent
     has_bet = any(e.get("recommendation") == "BET" for e in matchup_edges)
     query_lower = query.lower()
     has_keywords = any(kw in query_lower for kw in _EXPLANATION_KEYWORDS)
     should_search = has_bet or intent == "explanation" or has_keywords
 
-    return {
+    # Log final edges for mentioned teams
+    if teams:
+        team_edges = [
+            (e.get("away_team"), e.get("home_team"), e.get("recommendation"), e.get("game_date"))
+            for e in matchup_edges
+            if any(t.lower() in (e.get("home_team", "").lower(), e.get("away_team", "").lower()) for t in teams)
+        ]
+        logger.info("[SCHED] FINAL edges for %s: %s", teams, team_edges)
+
+    result: dict[str, Any] = {
         "matchup_edges": matchup_edges,
         "should_search_news": should_search,
         "errors": errors,
     }
+    # Propagate fallback-extracted teams so generate_response can use them
+    if teams != list(state.get("teams_mentioned", [])):
+        result["teams_mentioned"] = teams
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -272,6 +379,11 @@ def generate_response(state: AgentState) -> dict[str, Any]:
 
     # Filter edges to mentioned teams (regardless of intent classification)
     teams = state.get("teams_mentioned", [])
+    logger.info(
+        "[GEN] intent=%s teams=%s edges=%s",
+        intent, teams,
+        [(e.get("away_team"), e.get("home_team"), e.get("recommendation")) for e in matchup_edges],
+    )
     display_edges = matchup_edges
     if teams:
         teams_lower = {t.lower() for t in teams}
@@ -295,10 +407,24 @@ def generate_response(state: AgentState) -> dict[str, Any]:
     rationales: dict[str, str] = {}
     freeform_text = ""
 
+    # Schedule-only queries (e.g. "When is CBJ's next game?") use the NHL
+    # API data deterministically — skip the LLM to avoid hallucination.
+    schedule_only = teams and display_edges and all(
+        e.get("recommendation") == "SCHEDULE" for e in display_edges
+    )
+    logger.info(
+        "[GEN] schedule_only=%s display_edges=%s",
+        schedule_only,
+        [(e.get("away_team"), e.get("home_team"), e.get("recommendation")) for e in display_edges],
+    )
+
     # Determine response path:
+    # - schedule-only: deterministic, no LLM call
     # - slate/matchup intents: deterministic game blocks (BET only)
     # - explanation/general intents: freeform LLM text with game header
-    if intent in ("explanation", "general"):
+    if schedule_only:
+        pass  # deterministic — no LLM needed
+    elif intent in ("explanation", "general"):
         freeform_text = _fetch_freeform(query, context)
     elif intent in ("slate", "matchup"):
         rationales = _fetch_rationales(
@@ -306,8 +432,9 @@ def generate_response(state: AgentState) -> dict[str, Any]:
         )
 
     # Assemble response deterministically
+    # Force "matchup" intent for schedule-only so the structured path fires
     answer = build_structured_response(
-        intent=intent,
+        intent="matchup" if schedule_only else intent,
         edges=display_edges,
         rationales=rationales,
         retrieved_docs=retrieved_docs,
