@@ -225,21 +225,23 @@ def _build_intro(bet_count: int, total_count: int, teams: list[str] | None = Non
     """Build a conversational intro sentence."""
     team_str = " and ".join(teams) if teams else None
 
-    if bet_count == 0:
+    if total_count == 0:
         if team_str:
-            return f"I didn't find any +EV opportunities for the **{team_str}** right now."
-        return (
-            f"I looked at {total_count} upcoming game(s) and "
-            f"didn't find any +EV opportunities right now."
-        )
+            return f"I didn't find any upcoming games for the **{team_str}** right now."
+        return "I didn't find any upcoming games right now."
+
+    ev_note = ""
+    if bet_count > 0:
+        ev_note = f" with **{bet_count}** +EV opportunity{'s' if bet_count != 1 else ''}"
+
     if team_str:
         return (
             f"Here's what I found for the **{team_str}** — "
-            f"**{bet_count}** +EV opportunity{'s' if bet_count != 1 else ''}:"
+            f"**{total_count}** game{'s' if total_count != 1 else ''}{ev_note}:"
         )
     return (
-        f"I found **{bet_count} +EV opportunity{'s' if bet_count != 1 else ''}** "
-        f"out of {total_count} upcoming game(s):"
+        f"Here {'are' if total_count != 1 else 'is'} **{total_count}** upcoming "
+        f"game{'s' if total_count != 1 else ''}{ev_note}:"
     )
 
 
@@ -336,22 +338,21 @@ def build_structured_response(
                 else:
                     parts.append(_build_game_header(e))
         else:
-            # Slate query — only show BET games (exclude NO_ODDS/SCHEDULE from count)
+            # Slate query — show all games, highlight +EV ones
             total_with_market = len(has_odds)
             parts.append(_build_intro(len(bet_edges), total_with_market))
 
-            for e in bet_edges:
+            for e in has_odds:
                 game_key = f"{e['away_team']} @ {e['home_team']}"
-                rationale = rationales.get(game_key, "No analysis available.")
-                parts.append(build_game_block(e, rationale))
+                if e.get("recommendation") == "BET":
+                    rationale = rationales.get(game_key, "No analysis available.")
+                    parts.append(build_game_block(e, rationale))
+                else:
+                    parts.append(_build_game_header(e))
 
     if errors:
         parts.append("*Note: " + "; ".join(errors) + "*")
 
-    citations_block = build_citations_block(
-        retrieved_docs, bool(edges), tavily_results
-    )
-    parts.append("---\n" + citations_block)
     parts.append("*Disclaimer: Not financial advice.*")
 
     return "\n\n".join(parts)
