@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 INTENT_SYSTEM_PROMPT = """\
 You are an intent classifier for an NHL betting assistant called Mismatch.
 
@@ -94,6 +97,25 @@ def format_edges_for_prompt(edges: list[dict]) -> str:
                 block += f"  Away ({away}): kalshi={kalshi_away:.1%}\n"
             if kalshi_home is not None:
                 block += f"  Home ({home}): kalshi={kalshi_home:.1%}\n"
+            lines.append(block)
+            continue
+
+        if rec == "SCHEDULE":
+            # NHL schedule game — no betting market yet
+            time_str = ""
+            gs = e.get("game_status") or {}
+            raw = gs.get("start_time_utc", "")
+            if raw:
+                try:
+                    utc_dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+                    et_dt = utc_dt.astimezone(ZoneInfo("America/New_York"))
+                    time_str = f" — NHL schedule at {et_dt.strftime('%-I:%M %p ET')}"
+                except (ValueError, OSError):
+                    pass
+            block = (
+                f"Game: {away} @ {home} ({date}){time_str}\n"
+                f"  No betting market available yet for this game.\n"
+            )
             lines.append(block)
             continue
 

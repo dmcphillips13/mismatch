@@ -100,6 +100,33 @@ def _format_game_status(edge: dict) -> str:
     return ""
 
 
+def _format_schedule_line(edge: dict) -> str:
+    """Format a SCHEDULE edge as a clean 'next game' sentence."""
+    home = edge["home_team"]
+    away = edge["away_team"]
+    matchup = f"**{away} @ {home}**"
+
+    # Format date and time from game_status
+    gs = edge.get("game_status", {})
+    raw = gs.get("start_time_utc", "") or edge.get("game_date", "")
+    date_str = ""
+    time_str = ""
+    if raw:
+        try:
+            utc_dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+            et_dt = utc_dt.astimezone(_ET)
+            date_str = et_dt.strftime("%B %-d")
+            time_str = et_dt.strftime("%-I:%M %p ET")
+        except (ValueError, OSError):
+            date_str = edge.get("game_date", "")
+
+    if date_str and time_str:
+        return f"The next game is {matchup} on {date_str} at {time_str}."
+    if date_str:
+        return f"The next game is {matchup} on {date_str}."
+    return f"The next game is {matchup}."
+
+
 def _build_game_header(edge: dict) -> str:
     """Build the headline + both-sides odds table for a game (no rationale)."""
     home = edge["home_team"]
@@ -114,6 +141,10 @@ def _build_game_header(edge: dict) -> str:
 
     status = _format_game_status(edge)
     subtitle = f"*{away} @ {home} — {status}*" if status else f"*{away} @ {home}*"
+
+    # Schedule-only games — no odds data, just game info with start time
+    if rec == "SCHEDULE":
+        return f"{title}\n{subtitle}"
 
     # Kalshi-only games (no Odds API data) — show simplified table
     if rec == "NO_ODDS":
@@ -230,28 +261,36 @@ def build_structured_response(
     """
     parts: list[str] = []
 
+    # Handle SCHEDULE edges first — these are standalone "next game" results
+    schedule_edges = [e for e in edges if e.get("recommendation") == "SCHEDULE"]
+    non_schedule_edges = [e for e in edges if e.get("recommendation") != "SCHEDULE"]
+
     if freeform_text:
         # Freeform path — prepend game headers for relevant edges
         displayable = [
-            e for e in edges
+            e for e in non_schedule_edges
             if e.get("recommendation") not in ("NO_MARKET", "NO_ODDS")
         ]
         for e in displayable:
             parts.append(_build_game_header(e))
+        # If only schedule edges and freeform, show schedule info too
+        if not displayable and schedule_edges:
+            for e in schedule_edges:
+                parts.append(_format_schedule_line(e))
         parts.append(freeform_text)
     elif intent in ("slate", "matchup"):
         # Edges with full data (Odds API + optionally Kalshi)
         has_odds = [
-            e for e in edges
+            e for e in non_schedule_edges
             if e.get("recommendation") not in ("NO_MARKET", "NO_ODDS")
         ]
         # Kalshi-only edges (no Odds API data)
-        no_odds = [e for e in edges if e.get("recommendation") == "NO_ODDS"]
+        no_odds = [e for e in non_schedule_edges if e.get("recommendation") == "NO_ODDS"]
         bet_edges = [e for e in has_odds if e.get("recommendation") == "BET"]
 
         if teams_mentioned:
             team_str = " and ".join(teams_mentioned)
-            nomarket = [e for e in edges if e.get("recommendation") == "NO_MARKET"]
+            nomarket = [e for e in non_schedule_edges if e.get("recommendation") == "NO_MARKET"]
 
             # For Kalshi-only games, show only the nearest upcoming one
             if no_odds:
@@ -278,6 +317,10 @@ def build_structured_response(
                     f"**{e['away_team']} @ {e['home_team']}** "
                     f"on {e.get('game_date', '')}:"
                 )
+            elif schedule_edges:
+                # Schedule-only fallback — show next game from NHL API
+                for e in schedule_edges:
+                    parts.append(_format_schedule_line(e))
             elif nomarket:
                 games = [f"{e['away_team']} @ {e['home_team']}" for e in nomarket]
                 parts.append(
@@ -293,7 +336,7 @@ def build_structured_response(
                 else:
                     parts.append(_build_game_header(e))
         else:
-            # Slate query — only show BET games (exclude NO_ODDS from count)
+            # Slate query — only show BET games (exclude NO_ODDS/SCHEDULE from count)
             total_with_market = len(has_odds)
             parts.append(_build_intro(len(bet_edges), total_with_market))
 
