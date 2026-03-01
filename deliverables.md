@@ -153,4 +153,4 @@
 ### Task 7: Next Steps
 1. Do you plan to keep your RAG implementation via Dense Vector Retrieval for Demo Day? Why or why not?
 
-1. <!-- TODO -->
+Full disclosure, I'm planning to do a different project for demo day - this project was created specifically for the certification challenge due to RAG being more relevant for it. If I were to continue with Mismatch I would keep the Cohere reranking over the baseline dense retrieval, as the context precision and context recall gains are worth the latency tradeoff in this context (and the faithfulness remains high). I'd rather have a user wait an extra few seconds for a well-grounded answer than get a faster response that misses relevant context or hallucinates stats. Latency matters less here because the user is making a betting decision, not having a real-time conversation.
