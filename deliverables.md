@@ -96,18 +96,13 @@
 1. Describe the default chunking strategy that you will use for your data.  Why did you make this decision?
 2. Describe your data source and the external API you plan to use, as well as what role they will play in your solution. Discuss how they interact during usage.
 
-1. <!-- TODO -->
+1. The pipeline uses `RecursiveCharacterTextSplitter` with `chunk_size=500` and `chunk_overlap=50`, but the true chunking strategy is within the step before that when the documents are built. This reads three seasons of NHL game data from CSV files and aggregates the raw game records into 2,251 natural language summaries across five document types (team season summaries, a team's last 10 games, a team's last 20 games, head-to-head season summaries, and head-to-head matchups). Each summary is a self-contained paragraph with stats like win rate, goals per game, home/away splits, rest days, and back-to-back rate, and each one comes in under 500 characters by design. This results in the splitter passing these documents through unchanged, which is intentional. The raw data is structured (CSV rows of game results), not unstructured text, meaning that the real "chunking" decision is how to aggregate those rows into retrieval docs. Pre-computing small, structured summaries means every document in Qdrant is a complete, coherent doc (i.e no partial stat lines). The `RecursiveCharacterTextSplitter` acts as a guardrail in the pipeline in case future document types (i.e. Wikipedia articles about a team's season) exceed the threshold, but for the current data it's a no-op by design.
 
-2. <!-- TODO -->
+2. The data is three full seasons of regular season NHL results in CSV format from "Shane's Computer Solution Repository", each containing scores, dates, home/away, etc. These are processed into the summary documents described above and stored in Qdrant Cloud, where they serve as the RAG context for matchup history and team form questions.
 
+   The external APIs serve different roles in the agent pipeline. The Odds API provides current sportsbook odds for upcoming games, which the pipeline de-vigs into fair probabilities. The Kalshi API provides the current prediction market prices for the same games. The compute_edges node compares these two to produce a numerical edge. Tavily is used as a web search tool when the system finds a +EV edge or the user asks for an explanation, pulling recent injury reports and news. The NHL API provides live game scores, states, and team schedules to show real-time status.
 
-### Task 4: Build an end-to-end Agentic RAG application using a production-grade stack and your choice of commercial off-the-shelf model(s)
-1. Build an end-to-end prototype and deploy it to a *local* endpoint
-2. (Optional) Use locally-hosted OSS models instead of LLMs through the OpenAI API
-3. (Optional) Deploy your prototype to public endpoint using a tool like [Vercel](http://vercel.com/), [Render](https://render.com/), or [FastAPI Cloud](https://fastapicloud.com/)
-
-<!-- DELETE ? -->
-
+   For a user query, Qdrant first retrieves the relevant historical context (i.e. how two teams have matched up this season), the Odds API and Kalshi provide the live odds for the edge calculation, and Tavily optionally adds current news to round out the rationale. The LLM then uses all of this context to generate the rationale bulletpoints, while the odds tables and recommendations are formatted deterministically from the edge data.
 
 ### Task 5: Prepare a test data set (either by generating synthetic data or by assembling an existing dataset) to baseline an initial evaluation with RAGAS
 1. Assess your pipeline using the RAGAS framework, including the following key metrics: faithfulness, context precision, and context recall. Include any other metrics you feel are worthwhile to assess.   Provide a table of your output results.
