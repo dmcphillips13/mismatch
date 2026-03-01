@@ -239,6 +239,7 @@ tr:nth-child(2n) {
     flex-direction: column;
   }
 
+  .chat-input,
   .chat-button {
     width: 100%;
   }
