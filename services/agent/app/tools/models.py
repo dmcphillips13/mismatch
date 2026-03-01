@@ -46,6 +46,21 @@ class MatchupEdge:
 
 
 @dataclass(slots=True)
+class GameScore:
+    """Live / scheduled game data from the NHL Score API."""
+
+    home_abbrev: str          # "TOR"
+    away_abbrev: str          # "OTT"
+    game_state: str           # "FUT" | "LIVE" | "OFF" | "FINAL"
+    start_time_utc: str       # ISO 8601
+    period: int | None        # 1-5
+    period_type: str          # "REG" | "OT" | "SO"
+    clock: str                # "14:50" or ""
+    home_score: int | None
+    away_score: int | None
+
+
+@dataclass(slots=True)
 class TavilyResult:
     """A single search result from Tavily."""
 
