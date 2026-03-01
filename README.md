@@ -1,28 +1,57 @@
 # Mismatch
 
-This repository contains:
-- `web/` — Next.js TypeScript chat UI (thin proxy/client only)
-- `services/agent/` — Python FastAPI agent service
+NHL betting edge finder. Compares de-vigged sportsbook odds against Kalshi prediction market prices to surface +EV opportunities.
 
-## Source of truth
+## Deliverables: [DELIVERABLES.md](DELIVERABLES.md)
 
-Implementation requirements and execution order live in `AGENTS.md`.
-Session-to-session status and blockers live in `PROJECT_CONTEXT.md`.
-If this README and `AGENTS.md` differ, follow `AGENTS.md`.
+**Vercel-Deployed Demo:** https://mismatch-kohl.vercel.app
 
-## Local quick start
+## Architecture
 
-Frontend:
-1. `cd web`
-2. `pnpm install`
-3. `pnpm dev`
+```
+Vercel (web/)                    Render (services/agent/)
+┌──────────────┐                 ┌──────────────────────┐
+│  Next.js UI  │──/api/chat──▶  │  FastAPI + LangGraph │
+│              │◀─────────────  │  (uvicorn)           │
+└──────────────┘                 └──────────────────────┘
+```
 
-Backend:
-1. `cd services/agent`
-2. `uv venv`
-3. `source .venv/bin/activate`
-4. `uv sync`
-5. `uv run uvicorn app.main:app --reload --port 8000`
+**Agent pipeline:** intent classification → Qdrant retrieval → odds + Kalshi fetch → edge computation → (optional) Tavily news search → response generation
 
-Set in `web/.env.local`:
-- `NEXT_PUBLIC_AGENT_BASE_URL=http://localhost:8000`
+**Data sources:** Odds API (sportsbook lines), Kalshi (prediction markets), Qdrant Cloud (2,251 NHL docs), NHL API (schedules/scores), Tavily (news)
+
+## Local Development
+
+**Setup:**
+```bash
+# Backend
+cd services/agent
+cp .env.example .env  # fill in API keys
+uv sync
+
+# Frontend
+cd ../../web
+pnpm install
+echo "NEXT_PUBLIC_AGENT_BASE_URL=http://localhost:8000" > .env.local
+```
+
+**Run both services:**
+```bash
+pnpm run start:dev
+```
+
+**Or run individually:**
+```bash
+# Backend
+cd services/agent
+uv run uvicorn app.main:app --reload --port 8000
+
+# Frontend
+cd web
+pnpm dev
+```
+
+## Deployment
+
+- **Frontend:** Vercel — set `NEXT_PUBLIC_AGENT_BASE_URL` to Render URL
+- **Backend:** Render — see `render.yaml` blueprint, set API keys in env vars
