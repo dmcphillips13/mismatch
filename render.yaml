@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: mismatch-agent
+    runtime: python
+    repo: https://github.com/denismcphillips/mismatch
+    rootDir: services/agent
+    buildCommand: pip install uv && uv sync
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: QDRANT_COLLECTION
+        value: mismatch_docs
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: OPENAI_EMBEDDINGS_MODEL
+        value: text-embedding-3-small
+      - key: OPENAI_EMBEDDINGS_DIMENSIONS
+        value: "1536"
+      - key: ODDS_API_KEY
+        sync: false
+      - key: ODDS_API_BASE_URL
+        value: https://api.the-odds-api.com/v4
+      - key: KALSHI_API_KEY
+        sync: false
+      - key: KALSHI_EMAIL
+        sync: false
+      - key: KALSHI_PASSWORD
+        sync: false
+      - key: KALSHI_API_BASE_URL
+        value: https://trading-api.kalshi.com/trade-api/v2
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: TAVILY_API_BASE_URL
+        value: https://api.tavily.com
+      - key: COHERE_API_KEY
+        sync: false
+      - key: EDGE_THRESHOLD
+        value: "0.03"
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: PYTHON_VERSION
+        value: "3.11.11"

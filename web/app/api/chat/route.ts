@@ -11,7 +11,7 @@ type ChatRequestBody = {
   messages: IncomingMessage[];
 };
 
-const REQUEST_TIMEOUT_MS = 60_000;
+const REQUEST_TIMEOUT_MS = 120_000;
 
 function isValidMessage(value: unknown): value is IncomingMessage {
   if (!value || typeof value !== "object") return false;
