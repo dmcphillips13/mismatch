@@ -1,28 +1,245 @@
+/* ── Reset & Base ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  background: #111;
+  color: #e5e5e5;
+  line-height: 1.6;
 }
 
+/* ── Layout ── */
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ── */
+.header {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #f05a28;
+}
+
+/* ── Messages ── */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.message-user,
+.message-assistant {
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.message-user {
+  background: #252525;
+}
+
+.message-assistant {
+  background: #1a1a1a;
+  border: 1px solid #333;
+}
+
+.message-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #999;
+  margin-bottom: 0.25rem;
+}
+
+.message-user .message-label {
+  color: #f05a28;
+}
+
+/* Markdown inside messages */
+.message-assistant p {
+  margin: 0.4rem 0;
+}
+
+.message-assistant a {
+  color: #f05a28;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.message-assistant a:hover {
+  color: #ff6b3d;
+}
+
+.message-assistant code {
+  background: #252525;
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.message-assistant pre {
+  background: #252525;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.message-assistant pre code {
+  background: none;
+  padding: 0;
+}
+
+.message-assistant ul,
+.message-assistant ol {
+  padding-left: 1.25rem;
+  margin: 0.4rem 0;
+}
+
+.message-assistant blockquote {
+  border-left: 3px solid #f05a28;
+  margin: 0.5rem 0;
+  padding: 0.25rem 0.75rem;
+  color: #999;
+}
+
+/* ── Input area ── */
+.input-area {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.95rem;
+  background: #1a1a1a;
+  color: #e5e5e5;
+  border: 1px solid #333;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.chat-input::placeholder {
+  color: #666;
+}
+
+.chat-input:focus {
+  border-color: #f05a28;
+  box-shadow: 0 0 0 2px rgba(240, 90, 40, 0.25);
+}
+
+.chat-button {
+  padding: 0.65rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: #f05a28;
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+
+.chat-button:hover:not(:disabled) {
+  background: #ff6b3d;
+  box-shadow: 0 0 10px rgba(240, 90, 40, 0.35);
+}
+
+.chat-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Error ── */
+.error {
+  color: #ff4444;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Loading dots ── */
+.loading {
+  color: #999;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.loading::after {
+  content: "";
+  animation: dots 1.2s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0% { content: ""; }
+  25% { content: "."; }
+  50% { content: ".."; }
+  75% { content: "..."; }
+}
+
+/* ── Tables (dark theme) ── */
 table {
   border-collapse: collapse;
   margin: 0.5rem 0;
   width: max-content;
   max-width: 100%;
+  font-size: 0.9rem;
 }
 
 th,
 td {
   padding: 6px 14px;
-  border: 1px solid #d0d7de;
+  border: 1px solid #333;
   text-align: left;
 }
 
 th {
   font-weight: 600;
-  background-color: #f6f8fa;
+  background: #252525;
 }
 
 tr:nth-child(2n) {
-  background-color: #f6f8fa;
+  background: #1e1e1e;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .container {
+    padding: 1.25rem 1rem;
+  }
+
+  .header {
+    font-size: 1.25rem;
+  }
+
+  .message-user,
+  .message-assistant {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .input-area {
+    flex-direction: column;
+  }
+
+  .chat-button {
+    width: 100%;
+  }
 }

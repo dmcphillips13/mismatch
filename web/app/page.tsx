@@ -74,35 +74,44 @@ export default function Home() {
   }
 
   return (
-    <main style={{ maxWidth: 720, margin: "0 auto", padding: "2rem" }}>
-      <h1>Mismatch Chat</h1>
+    <main className="container">
+      <h1 className="header">Mismatch Chat</h1>
 
-      <div style={{ marginBottom: "1rem" }}>
+      <div className="messages">
         {messages.map((message, index) => (
-          <div key={`${message.role}-${index}`} style={{ marginBottom: "1rem" }}>
-            <strong>{message.role === "user" ? "You" : "Assistant"}:</strong>
+          <div
+            key={`${message.role}-${index}`}
+            className={message.role === "user" ? "message-user" : "message-assistant"}
+          >
+            <span className="message-label">
+              {message.role === "user" ? "You" : "Assistant"}
+            </span>
             {message.role === "assistant" ? (
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
             ) : (
-              <p style={{ margin: "0.25rem 0" }}>{message.content}</p>
+              <p style={{ margin: 0 }}>{message.content}</p>
             )}
           </div>
         ))}
       </div>
 
-      {error ? <p style={{ color: "crimson" }}>{error}</p> : null}
-      {loading ? <p>Loading...</p> : null}
+      {error ? <p className="error">{error}</p> : null}
+      {loading ? <p className="loading">Thinking</p> : null}
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="input-area">
         <input
           type="text"
           value={input}
           onChange={(event) => setInput(event.target.value)}
           placeholder="Ask about mismatch opportunities..."
           disabled={loading}
-          style={{ width: "100%", marginBottom: "0.5rem" }}
+          className="chat-input"
         />
-        <button type="submit" disabled={loading || input.trim().length === 0}>
+        <button
+          type="submit"
+          disabled={loading || input.trim().length === 0}
+          className="chat-button"
+        >
           Send
         </button>
       </form>
