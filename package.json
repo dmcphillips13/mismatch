@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "packageManager": "pnpm@10.28.1",
   "scripts": {
+    "start:dev": "cd services/agent && uv run uvicorn app.main:app --reload --port 8000 & pnpm -C web dev",
     "dev": "pnpm -C web dev",
     "build": "pnpm -C web build",
     "start": "pnpm -C web start",

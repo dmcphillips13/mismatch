@@ -1,40 +1,27 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-
-/** Minimal citation shape returned by the backend for assistant responses. */
-type Citation = {
-  id?: string;
-  season_id?: string;
-};
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 /** Chat message state used by the thin frontend client. */
 type ChatMessage = {
   role: "user" | "assistant";
   content: string;
-  citations?: Citation[];
 };
 
-/**
- * Flexible response shape so the UI can handle either:
- * - { message: { content, citations } }
- * - { content, citations }
- */
+/** Response shape from the backend /chat endpoint. */
 type ChatResponse = {
-  message?: {
-    role?: "assistant";
-    content?: string;
-    citations?: Citation[];
-  };
-  content?: string;
-  citations?: Citation[];
+  answer?: string;
+  citations?: Record<string, unknown>[];
+  debug?: Record<string, unknown>;
 };
 
 /**
  * Thin chat UI:
  * - keeps local message state
  * - forwards conversation to /api/chat
- * - renders assistant citations when present
+ * - renders assistant response as markdown
  */
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -73,16 +60,11 @@ export default function Home() {
       const data = (await response.json()) as ChatResponse;
 
       const assistantContent =
-        data.message?.content?.trim() || data.content?.trim() || "I could not generate a response.";
-      const assistantCitations = data.message?.citations ?? data.citations;
+        data.answer?.trim() || "I could not generate a response.";
 
       setMessages((prev) => [
         ...prev,
-        {
-          role: "assistant",
-          content: assistantContent,
-          citations: assistantCitations,
-        },
+        { role: "assistant", content: assistantContent },
       ]);
     } catch {
       setError("The chat service is currently unavailable. Please try again.");
@@ -99,18 +81,11 @@ export default function Home() {
         {messages.map((message, index) => (
           <div key={`${message.role}-${index}`} style={{ marginBottom: "1rem" }}>
             <strong>{message.role === "user" ? "You" : "Assistant"}:</strong>
-            <p style={{ margin: "0.25rem 0" }}>{message.content}</p>
-
-            {message.role === "assistant" && message.citations && message.citations.length > 0 ? (
-              <ul style={{ marginTop: "0.25rem" }}>
-                {message.citations.map((citation, citationIndex) => (
-                  <li key={`${index}-${citationIndex}`}>
-                    id: {citation.id ?? "n/a"}
-                    {citation.season_id ? ` | season_id: ${citation.season_id}` : ""}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+            {message.role === "assistant" ? (
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+            ) : (
+              <p style={{ margin: "0.25rem 0" }}>{message.content}</p>
+            )}
           </div>
         ))}
       </div>
