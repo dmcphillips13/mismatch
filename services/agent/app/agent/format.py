@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+
+from zoneinfo import ZoneInfo
+
 
 def _fmt_pct(val: float | None) -> str:
     if val is None:
@@ -15,42 +19,142 @@ def _fmt_edge(val: float | None) -> str:
     return f"{val * 100:+.1f}%"
 
 
-def _best_side(edge: dict) -> dict:
-    """Pick the side with the better edge for display."""
+def _ev_team(edge: dict) -> tuple[str, str]:
+    """Return (ev_team, other_team) for the side with the better edge."""
     home_e = edge.get("home_edge")
     away_e = edge.get("away_edge")
     home_val = home_e if home_e is not None else float("-inf")
     away_val = away_e if away_e is not None else float("-inf")
-
     if away_val > home_val:
-        return {
-            "team": edge["away_team"],
-            "fair_prob": edge.get("away_fair_prob"),
-            "kalshi_prob": edge.get("kalshi_away_prob"),
-            "edge": away_e,
-        }
-    return {
-        "team": edge["home_team"],
-        "fair_prob": edge.get("home_fair_prob"),
-        "kalshi_prob": edge.get("kalshi_home_prob"),
-        "edge": home_e,
-    }
+        return edge["away_team"], edge["home_team"]
+    return edge["home_team"], edge["away_team"]
+
+
+_PERIOD_ORDINALS = {1: "1st", 2: "2nd", 3: "3rd", 4: "4th", 5: "5th"}
+_ET = ZoneInfo("America/New_York")
+
+
+def _format_game_status(edge: dict) -> str:
+    """Return a display string for game timing/status, or empty string if unavailable."""
+    gs = edge.get("game_status")
+    if not gs:
+        return ""
+
+    state = gs.get("game_state", "")
+    away_score = gs.get("away_score")
+    home_score = gs.get("home_score")
+
+    if state in ("FUT", "PRE"):
+        raw = gs.get("start_time_utc", "")
+        if raw:
+            try:
+                utc_dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+                et_dt = utc_dt.astimezone(_ET)
+                return et_dt.strftime("%-I:%M %p ET")
+            except (ValueError, OSError):
+                pass
+        return ""
+
+    if state in ("LIVE", "CRIT"):
+        period = gs.get("period")
+        period_type = gs.get("period_type", "REG")
+        clock = gs.get("clock", "")
+
+        if period_type == "OT":
+            period_str = "OT"
+        elif period_type == "SO":
+            period_str = "SO"
+        else:
+            period_str = _PERIOD_ORDINALS.get(period, f"P{period}") if period else ""
+
+        score_str = ""
+        if away_score is not None and home_score is not None:
+            away_abbrev = gs.get("away_abbrev", "")
+            home_abbrev = gs.get("home_abbrev", "")
+            score_str = f" {away_abbrev} {away_score}, {home_abbrev} {home_score}"
+
+        parts = ["LIVE"]
+        if period_str and clock:
+            parts.append(f"{period_str}, {clock} remaining")
+        elif period_str:
+            parts.append(period_str)
+        result = " — ".join(parts)
+        if score_str:
+            result += f" |{score_str}"
+        return result
+
+    if state in ("OFF", "FINAL"):
+        period_type = gs.get("period_type", "REG")
+        score_str = ""
+        if away_score is not None and home_score is not None:
+            away_abbrev = gs.get("away_abbrev", "")
+            home_abbrev = gs.get("home_abbrev", "")
+            score_str = f" {away_abbrev} {away_score}, {home_abbrev} {home_score}"
+
+        if period_type == "OT":
+            return f"Final (OT){' |' + score_str if score_str else ''}"
+        if period_type == "SO":
+            return f"Final (SO){' |' + score_str if score_str else ''}"
+        return f"Final{' |' + score_str if score_str else ''}"
+
+    return ""
+
+
+def _build_game_header(edge: dict) -> str:
+    """Build the headline + both-sides odds table for a game (no rationale)."""
+    home = edge["home_team"]
+    away = edge["away_team"]
+    rec = edge.get("recommendation", "")
+
+    if rec == "BET":
+        best, other = _ev_team(edge)
+        title = f"### {best} over {other}"
+    else:
+        title = f"### {away} @ {home}"
+
+    status = _format_game_status(edge)
+    subtitle = f"*{away} @ {home} — {status}*" if status else f"*{away} @ {home}*"
+
+    # Kalshi-only games (no Odds API data) — show simplified table
+    if rec == "NO_ODDS":
+        kalshi_away = edge.get("kalshi_away_prob")
+        kalshi_home = edge.get("kalshi_home_prob")
+        rows = "\n".join(
+            f"| {t} | {_fmt_pct(k)} |"
+            for t, k in [(away, kalshi_away), (home, kalshi_home)]
+            if k is not None
+        )
+        return (
+            f"{title}\n"
+            f"{subtitle}\n\n"
+            f"| Team | Kalshi |\n"
+            f"|---|---|\n"
+            f"{rows}"
+        )
+
+    sides = [
+        (away, edge.get("kalshi_away_prob"), edge.get("away_fair_prob"), edge.get("away_edge")),
+        (home, edge.get("kalshi_home_prob"), edge.get("home_fair_prob"), edge.get("home_edge")),
+    ]
+    sides.sort(key=lambda s: s[3] if s[3] is not None else float("-inf"), reverse=True)
+
+    rows = "\n".join(
+        f"| {t} | {_fmt_pct(k)} | {_fmt_pct(f)} | {_fmt_edge(e)} |"
+        for t, k, f, e in sides
+    )
+
+    return (
+        f"{title}\n"
+        f"{subtitle}\n\n"
+        f"| Team | Kalshi | Fair (de-vigged) | Edge |\n"
+        f"|---|---|---|---|\n"
+        f"{rows}"
+    )
 
 
 def build_game_block(edge: dict, rationale: str) -> str:
-    """Build one §8 game block deterministically from edge data."""
-    best = _best_side(edge)
-    home = edge["home_team"]
-    away = edge["away_team"]
-
-    return (
-        f"Recommendation: {edge['recommendation']}\n"
-        f"Game: {away} @ {home}\n"
-        f"Kalshi Probability: {_fmt_pct(best['kalshi_prob'])} ({best['team']})\n"
-        f"Fair Probability (de-vigged): {_fmt_pct(best['fair_prob'])} ({best['team']})\n"
-        f"Edge: {_fmt_edge(best['edge'])}\n"
-        f"Rationale: {rationale}"
-    )
+    """Build one game block in markdown from edge data."""
+    return f"{_build_game_header(edge)}\n\n{rationale}"
 
 
 def build_citations_block(
@@ -59,7 +163,7 @@ def build_citations_block(
     tavily_results: list[dict],
 ) -> str:
     """Build the Citations section from structured data."""
-    lines: list[str] = ["Citations:"]
+    lines: list[str] = ["#### Sources"]
 
     for doc in retrieved_docs:
         meta = doc.get("metadata", {})
@@ -68,10 +172,9 @@ def build_citations_block(
             label = f"{teams_list[0]} vs {teams_list[1]}"
         else:
             label = meta.get("team", "Unknown")
-        doc_id = doc.get("id", "")
         season = meta.get("season_id", "")
         doc_type = meta.get("doc_type", "")
-        lines.append(f"- [{doc_id}] {label} ({season}, {doc_type}) [Qdrant]")
+        lines.append(f"- {label} ({season}, {doc_type})")
 
     if has_odds:
         lines.append("- Odds API (de-vigged moneyline)")
@@ -79,9 +182,34 @@ def build_citations_block(
     for r in tavily_results:
         title = r.get("title", "")
         url = r.get("url", "")
-        lines.append(f"- {title} ({url})")
+        if url:
+            lines.append(f"- [{title}]({url})")
+        else:
+            lines.append(f"- {title}")
 
     return "\n".join(lines)
+
+
+def _build_intro(bet_count: int, total_count: int, teams: list[str] | None = None) -> str:
+    """Build a conversational intro sentence."""
+    team_str = " and ".join(teams) if teams else None
+
+    if bet_count == 0:
+        if team_str:
+            return f"I didn't find any +EV opportunities for the **{team_str}** right now."
+        return (
+            f"I looked at {total_count} upcoming game(s) and "
+            f"didn't find any +EV opportunities right now."
+        )
+    if team_str:
+        return (
+            f"Here's what I found for the **{team_str}** — "
+            f"**{bet_count}** +EV opportunity{'s' if bet_count != 1 else ''}:"
+        )
+    return (
+        f"I found **{bet_count} +EV opportunity{'s' if bet_count != 1 else ''}** "
+        f"out of {total_count} upcoming game(s):"
+    )
 
 
 def build_structured_response(
@@ -92,43 +220,95 @@ def build_structured_response(
     tavily_results: list[dict],
     errors: list[str],
     freeform_text: str = "",
+    teams_mentioned: list[str] | None = None,
 ) -> str:
-    """Assemble the full response with deterministic §8 formatting.
+    """Assemble the full response with deterministic formatting.
 
-    For slate/matchup intents: game blocks are built from edge data,
-    only rationale text comes from LLM.
-    For explanation/general intents: freeform LLM text is used, with
-    citations and disclaimer appended.
+    For slate/matchup intents with BET edges: game blocks with rationales.
+    For freeform fallback (matchup with no BET, explanation, general):
+    game header + odds table prepended before LLM commentary.
     """
     parts: list[str] = []
 
-    if intent in ("slate", "matchup"):
-        no_market: list[str] = []
-        for e in edges:
-            if e["recommendation"] == "NO_MARKET":
-                no_market.append(f"{e['away_team']} @ {e['home_team']}")
-                continue
-            game_key = f"{e['away_team']} @ {e['home_team']}"
-            rationale = rationales.get(game_key, "No analysis available.")
-            parts.append(build_game_block(e, rationale))
+    if freeform_text:
+        # Freeform path — prepend game headers for relevant edges
+        displayable = [
+            e for e in edges
+            if e.get("recommendation") not in ("NO_MARKET", "NO_ODDS")
+        ]
+        for e in displayable:
+            parts.append(_build_game_header(e))
+        parts.append(freeform_text)
+    elif intent in ("slate", "matchup"):
+        # Edges with full data (Odds API + optionally Kalshi)
+        has_odds = [
+            e for e in edges
+            if e.get("recommendation") not in ("NO_MARKET", "NO_ODDS")
+        ]
+        # Kalshi-only edges (no Odds API data)
+        no_odds = [e for e in edges if e.get("recommendation") == "NO_ODDS"]
+        bet_edges = [e for e in has_odds if e.get("recommendation") == "BET"]
 
-        if no_market:
-            parts.append(
-                f"{len(no_market)} other game(s) have no Kalshi market "
-                f"available: {', '.join(no_market)}"
-            )
-    else:
-        # explanation / general — use freeform LLM text
-        if freeform_text:
-            parts.append(freeform_text)
+        if teams_mentioned:
+            team_str = " and ".join(teams_mentioned)
+            nomarket = [e for e in edges if e.get("recommendation") == "NO_MARKET"]
+
+            # For Kalshi-only games, show only the nearest upcoming one
+            if no_odds:
+                no_odds.sort(key=lambda e: e.get("game_date", ""))
+                no_odds = no_odds[:1]
+
+            show_edges = has_odds + no_odds
+
+            # Matchup query — show all games for mentioned teams
+            if bet_edges:
+                parts.append(
+                    f"**Yes** — the **{team_str}** play today and I found "
+                    f"a +EV opportunity:"
+                )
+            elif has_odds:
+                parts.append(
+                    f"**Yes** — the **{team_str}** play today, "
+                    f"but I don't see a +EV edge right now:"
+                )
+            elif no_odds:
+                e = no_odds[0]
+                parts.append(
+                    f"The **{team_str}** next game is "
+                    f"**{e['away_team']} @ {e['home_team']}** "
+                    f"on {e.get('game_date', '')}:"
+                )
+            elif nomarket:
+                games = [f"{e['away_team']} @ {e['home_team']}" for e in nomarket]
+                parts.append(
+                    f"The **{team_str}** game ({', '.join(games)}) is scheduled "
+                    f"but there's no Kalshi market available for it yet, "
+                    f"so I can't calculate an edge."
+                )
+            for e in show_edges:
+                game_key = f"{e['away_team']} @ {e['home_team']}"
+                rationale = rationales.get(game_key, "")
+                if rationale:
+                    parts.append(build_game_block(e, rationale))
+                else:
+                    parts.append(_build_game_header(e))
+        else:
+            # Slate query — only show BET games (exclude NO_ODDS from count)
+            total_with_market = len(has_odds)
+            parts.append(_build_intro(len(bet_edges), total_with_market))
+
+            for e in bet_edges:
+                game_key = f"{e['away_team']} @ {e['home_team']}"
+                rationale = rationales.get(game_key, "No analysis available.")
+                parts.append(build_game_block(e, rationale))
 
     if errors:
-        parts.append("Note: " + "; ".join(errors))
+        parts.append("*Note: " + "; ".join(errors) + "*")
 
     citations_block = build_citations_block(
         retrieved_docs, bool(edges), tavily_results
     )
-    parts.append(citations_block)
-    parts.append("Disclaimer: Not financial advice.")
+    parts.append("---\n" + citations_block)
+    parts.append("*Disclaimer: Not financial advice.*")
 
     return "\n\n".join(parts)
