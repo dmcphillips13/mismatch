@@ -106,12 +106,16 @@ def retrieve(state: AgentState) -> dict[str, Any]:
 
     try:
         service = QdrantRetrievalService()
+        season_filter = [settings.CURRENT_SEASON, "all"]
         try:
-            docs = service.search(query, limit=6, teams=teams if teams else None)
+            docs = service.search(
+                query, limit=6, teams=teams if teams else None,
+                season_ids=season_filter,
+            )
         except Exception:
             if teams:
                 logger.warning("Filtered retrieval failed, retrying without team filter")
-                docs = service.search(query, limit=6)
+                docs = service.search(query, limit=6, season_ids=season_filter)
             else:
                 raise
         retrieved_docs = [asdict(d) for d in docs]

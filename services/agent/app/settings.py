@@ -34,6 +34,7 @@ class Settings(BaseSettings):
 
     # Thresholds
     EDGE_THRESHOLD: float = 0.03
+    CURRENT_SEASON: str = "2025-26"
 
     # LangSmith
     LANGSMITH_API_KEY: str | None = None
