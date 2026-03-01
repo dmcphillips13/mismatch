@@ -11,6 +11,7 @@ from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.llms import LangchainLLMWrapper
 from ragas.metrics._answer_relevance import AnswerRelevancy
 from ragas.metrics._context_entities_recall import ContextEntityRecall
+from ragas.metrics._context_precision import ContextPrecision
 from ragas.metrics._context_recall import ContextRecall
 from ragas.metrics._factual_correctness import FactualCorrectness
 from ragas.metrics._faithfulness import Faithfulness
@@ -24,6 +25,7 @@ MODEL_PRICING_PER_1M_TOKENS = {
 
 METRIC_COLS = [
     "faithfulness",
+    "context_precision",
     "context_recall",
     "context_entity_recall",
     "answer_relevancy",
@@ -32,6 +34,7 @@ METRIC_COLS = [
 
 RAGAS_METRICS = [
     Faithfulness(),
+    ContextPrecision(),
     ContextRecall(),
     ContextEntityRecall(),
     AnswerRelevancy(),
@@ -132,6 +135,7 @@ def upload_results_to_langsmith(
         for sample, score_row in zip(eval_samples, score_rows):
             outputs = {
                 "faithfulness": _get_metric_value(score_row, "faithfulness"),
+                "context_precision": _get_metric_value(score_row, "context_precision"),
                 "context_recall": _get_metric_value(score_row, "context_recall"),
                 "context_entity_recall": _get_metric_value(score_row, "context_entity_recall"),
                 "answer_relevancy": _get_metric_value(score_row, "answer_relevancy"),
@@ -150,6 +154,7 @@ def upload_results_to_langsmith(
                     "reference": sample.get("reference", ""),
                     "retrieved_context_count": len(sample.get("retrieved_contexts", [])),
                     "metric_faithfulness": outputs["faithfulness"],
+                    "metric_context_precision": outputs["context_precision"],
                     "metric_context_recall": outputs["context_recall"],
                     "metric_context_entity_recall": outputs["context_entity_recall"],
                     "metric_answer_relevancy": outputs["answer_relevancy"],

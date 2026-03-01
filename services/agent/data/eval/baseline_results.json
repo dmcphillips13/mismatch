@@ -4,17 +4,11 @@
   "retrieval_limit": 6,
   "num_examples": 51,
   "metrics": {
-    "faithfulness": 0.8278390131422367,
-    "context_recall": 0.7127450980392156,
-    "context_entity_recall": 0.3561193154956482,
-    "answer_relevancy": 0.6424273464502315,
-    "factual_correctness": 0.44529411764705884
-  },
-  "performance": {
-    "avg_latency_ms": 2570.721176470588,
-    "p95_latency_ms": 5665.23,
-    "avg_cost_usd": 0.00017150882352941178,
-    "total_cost_usd": 0.00874695,
-    "sample_count": 51
+    "faithfulness": 0.8815305609423256,
+    "context_precision": 0.5859477123705555,
+    "context_recall": 0.727124183006536,
+    "context_entity_recall": 0.3333078677888901,
+    "answer_relevancy": 0.603168807760195,
+    "factual_correctness": 0.4092156862745098
   }
 }
