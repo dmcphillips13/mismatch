@@ -1,3 +1,5 @@
+## Loom Video: [TODO]
+
 ### Task 1: Articulate the problem and the user of your application
 - Write a succinct 1-sentence description of the problem
 - Write 1-2 paragraphs on why this is a problem for your specific user
@@ -103,6 +105,10 @@
    The external APIs serve different roles in the agent pipeline. The Odds API provides current sportsbook odds for upcoming games, which the pipeline de-vigs into fair probabilities. The Kalshi API provides the current prediction market prices for the same games. The compute_edges node compares these two to produce a numerical edge. Tavily is used as a web search tool when the system finds a +EV edge or the user asks for an explanation, pulling recent injury reports and news. The NHL API provides live game scores, states, and team schedules to show real-time status.
 
    For a user query, Qdrant first retrieves the relevant historical context (i.e. how two teams have matched up this season), the Odds API and Kalshi provide the live odds for the edge calculation, and Tavily optionally adds current news to round out the rationale. The LLM then uses all of this context to generate the rationale bulletpoints, while the odds tables and recommendations are formatted deterministically from the edge data.
+
+### Task 4: Build an end-to-end Agentic RAG application using a production-grade stack and your choice of commercial off-the-shelf model(s)
+- Vercel: https://mismatch-kohl.vercel.app
+- Backend: https://mismatch-agent.onrender.com
 
 ### Task 5: Prepare a test data set (either by generating synthetic data or by assembling an existing dataset) to baseline an initial evaluation with RAGAS
 1. Assess your pipeline using the RAGAS framework, including the following key metrics: faithfulness, context precision, and context recall. Include any other metrics you feel are worthwhile to assess.   Provide a table of your output results.
