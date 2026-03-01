@@ -18,8 +18,8 @@
 
 
 ### Task 2: Articulate your proposed solution
-1. Write 1-2 paragraphs on your proposed solution.  How will it look and feel to the user? Describe the tools you plan to use to build it.
-2.  Create an infrastructure diagram of your stack showing how everything fits together.  Write one sentence on why you made each tooling choice.
+- Write 1-2 paragraphs on your proposed solution. How will it look and feel to the user? Describe the tools you plan to use to build it.
+- Create an infrastructure diagram of your stack showing how everything fits together.  Write one sentence on why you made each tooling choice.
     1. LLM(s)
     2. Agent orchestration framework
     3. Tool(s)
@@ -30,13 +30,66 @@
     8. User interface
     9. Deployment tool
     10. Any other components you need
-3. What are the RAG and agent components of your project, exactly?
+- What are the RAG and agent components of your project, exactly?
 
-1. <!-- TODO -->
+1. Mismatch is a chatbot where the user types a question and gets back a structured response with odds tables, bet or pass recommendations, and supporting rationale. The frontend is a Next.js app that sends messages to a Python FastAPI backend, where a LangGraph agent pipeline handles the query. The pipeline first classifies the user's intent (slate discovery, matchup check, explanation, or general), then retrieves relevant historical context from Qdrant, fetches live odds from the Odds API and Kalshi, computes the edge between the two, optionally searches for injury/goalie news via Tavily, and uses all of this context to generate a response. For the response, the LLM only generates rationale text, not the odds tables or recommendations, which prevents hallucinated numbers.
 
-2. <!-- TODO -->
+   The user experience is conversational. You can ask "What games are +EV tonight?" and get a full slate of games with edges, or ask about a specific team and get a focused matchup breakdown. The system always cites its sources (retrieved docs, Odds API, Tavily links) and adds a disclaimer noting that this is not financial advice. The goal is for the user to get in a few seconds what would otherwise take 10-15 minutes of manual research across multiple sites.
 
-3. <!-- TODO -->
+2. Infrastructure diagram:
+
+   ```
+   ┌─────────────────┐     ┌─────────────────────────────────────────────┐
+   │   Next.js UI    │────▶│           FastAPI Backend                   │
+   │                 │◀────│                                             │
+   └─────────────────┘     │  ┌─────────────────────────────────────┐    │
+                           │  │         LangGraph Pipeline          │    │
+                           │  │                                     │    │
+                           │  │  interpret_intent (OpenAI gpt-4o-mini)   │
+                           │  │        │                            │    │
+                           │  │        ▼                            │    │
+                           │  │  retrieve (Qdrant)                  │    │
+                           │  │        │                            │    │
+                           │  │        ▼                            │    │
+                           │  │  fetch_odds_and_kalshi              │    │
+                           │  │  (Odds API + Kalshi API)            │    │
+                           │  │        │                            │    │
+                           │  │        ▼ (conditional)              │    │
+                           │  │  tavily_search (if BET or explain)  │    │
+                           │  │        │                            │    │
+                           │  │        ▼                            │    │
+                           │  │  generate_response (OpenAI)         │    │
+                           │  └─────────────────────────────────────┘    │
+                           │                                             │
+                           │  LangSmith (tracing + eval datasets)        │
+                           └─────────────────────────────────────────────┘
+                                         │           │
+                              ┌──────────┘           └──────────┐
+                              ▼                                  ▼
+                     ┌────────────────┐               ┌──────────────────┐
+                     │  Qdrant Cloud  │               │  External APIs   │
+                     │  (mismatch_docs│               │  - Odds API      │
+                     │   collection)  │               │  - Kalshi        │
+                     └────────────────┘               │  - Tavily        │
+                                                      │  - NHL API       │
+                                                      └──────────────────┘
+   ```
+
+   Tooling choices:
+   1. **LLM:** This uses gpt-4o-mini because it is fast, cheap, and capable enough for intent classification and rationale generation where the heavy lifting is done deterministically.
+   2. **Agent orchestration:** This uses LangGraph to give us control over the node pipeline and conditional edges, which is important because the Tavily search is conditional based on whether there's a bet recommendation or an explanation request.
+   3. **Tools:** We use the Odds API for sportsbook consensus odds, the Kalshi API for prediction market prices, Tavily for web search for injuries/news, and the NHL API for live scores and schedule data.
+   4. **Embedding model:** This uses text-embedding-3-small for a good balance of cost and quality for embedding pre-computed summary documents.
+   5. **Vector database:** This uses Qdrant Cloud with cosine distance because this supports metadata filtering by team, season, and doc type, which is critical for retrieving the right head to head or form summary for a given matchup.
+   6. **Monitoring:** This uses LangSmith to provide tracing for every agent run and to host the evaluation datasets, making it easy to compare retrieval experiments.
+   7. **Evaluation:** This uses RAGAS to give us standardized metrics (faithfulness, context recall, answer relevancy) to measure retrieval quality and track improvements.
+   8. **User interface:** This uses Next.js with React to create a thin chat UI frontend that sends requests to the Python backend, keeping all agent logic in Python. This also makes deployment easier with Vercel.
+   9. **Deployment:** This will use public deployment via Vercel and a cloud host for the backend. We chose Next.js for ease of Vercel deployment.
+   10. **NHL API:** The public NHL Stats API provides live scores, game states, and team schedules, which the pipeline uses to show real-time game status. **Edge computation:** A deterministic math layer de-vigs the sportsbook odds into fair probabilities and compares them to Kalshi's odds to produce an edge for each side of a game.
+
+3. The RAG component is the Qdrant retrieval layer. It stores 2,251 pre-computed summary documents (team season summaries, head-to-head season summaries, and recent H2H rolling summaries) generated from three seasons of NHL CSV data. When a user asks a question, the pipeline embeds the query, searches Qdrant with optional metadata filters (team name, season, doc type), and passes the retrieved context to the LLM for rationale generation.
+
+   The agent component is the LangGraph pipeline that orchestrates the full workflow. It classifies intent, calls the retrieval layer, fetches live data from four external APIs (Odds API, Kalshi, NHL API, Tavily), computes the mathematical edge between sportsbook fair probability and Kalshi's implied probability, and assembles the response. The conditional Tavily node is the clearest example of agent behavior — the system decides whether to search for news based on whether it found a +EV edge or the user asked for an explanation.
 
 
 ### Task 3: Collect your own data (RAG) and choose at least one external API to use (Agent)
