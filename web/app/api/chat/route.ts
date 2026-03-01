@@ -11,7 +11,7 @@ type ChatRequestBody = {
   messages: IncomingMessage[];
 };
 
-const REQUEST_TIMEOUT_MS = 15_000;
+const REQUEST_TIMEOUT_MS = 60_000;
 
 function isValidMessage(value: unknown): value is IncomingMessage {
   if (!value || typeof value !== "object") return false;
@@ -23,7 +23,7 @@ function isValidMessage(value: unknown): value is IncomingMessage {
  * POST /api/chat
  * Thin server-side proxy to the Python agent backend.
  * - reads NEXT_PUBLIC_AGENT_BASE_URL
- * - applies a 15s timeout
+ * - applies a 60s timeout
  * - returns a generic error message for upstream failures
  */
 export async function POST(request: Request) {
