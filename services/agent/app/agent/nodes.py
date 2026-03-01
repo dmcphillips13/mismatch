@@ -23,9 +23,10 @@ from app.settings import settings
 from app.tools.kalshi import KalshiClient
 from app.tools.match import build_matchup_edges
 from app.tools.models import GameOdds, KalshiMarket
+from app.tools.nhl_api import NHLScoreClient
 from app.tools.odds_api import OddsAPIClient
 from app.tools.tavily import TavilyClient
-from app.utils.team_names import normalize_team_name
+from app.utils.team_names import normalize_team_name, team_name_to_abbrev
 
 logger = logging.getLogger(__name__)
 
@@ -186,6 +187,22 @@ def compute_edges(state: AgentState) -> dict[str, Any]:
         errors.append(f"Edge computation failed: {exc}")
         matchup_edges = []
 
+    # Fetch NHL live scores and attach game_status to each edge
+    try:
+        scores = NHLScoreClient().fetch_live_scores()
+        score_lookup: dict[tuple[str, str], dict] = {}
+        for s in scores:
+            score_lookup[(s.away_abbrev, s.home_abbrev)] = asdict(s)
+
+        for edge in matchup_edges:
+            away_abbrev = team_name_to_abbrev(edge["away_team"]) or ""
+            home_abbrev = team_name_to_abbrev(edge["home_team"]) or ""
+            game_score = score_lookup.get((away_abbrev, home_abbrev))
+            if game_score:
+                edge["game_status"] = game_score
+    except Exception as exc:
+        logger.warning("NHL score fetch failed: %s", exc, exc_info=True)
+
     # Tavily gating: search if any BET recommendation or explanation intent
     has_bet = any(e.get("recommendation") == "BET" for e in matchup_edges)
     query_lower = query.lower()
@@ -253,10 +270,10 @@ def generate_response(state: AgentState) -> dict[str, Any]:
     retrieved_docs = state.get("retrieved_docs", [])
     errors: list[str] = list(state.get("errors", []))
 
-    # For matchup intent, filter edges to only the mentioned teams
+    # Filter edges to mentioned teams (regardless of intent classification)
     teams = state.get("teams_mentioned", [])
     display_edges = matchup_edges
-    if intent == "matchup" and teams:
+    if teams:
         teams_lower = {t.lower() for t in teams}
         display_edges = [
             e for e in matchup_edges
@@ -264,11 +281,10 @@ def generate_response(state: AgentState) -> dict[str, Any]:
             or e.get("away_team", "").lower() in teams_lower
         ]
         if not display_edges:
-            # Requested matchup not on today's slate
             errors = list(errors)
             errors.append(
                 f"No active market found for {' vs '.join(teams)}. "
-                "The game may not be scheduled today."
+                "No active market found — the game may not be on the upcoming schedule."
             )
 
     # Build shared context for the LLM
@@ -279,10 +295,15 @@ def generate_response(state: AgentState) -> dict[str, Any]:
     rationales: dict[str, str] = {}
     freeform_text = ""
 
-    if intent in ("slate", "matchup"):
-        rationales = _fetch_rationales(query, context, display_edges)
-    else:
+    # Determine response path:
+    # - slate/matchup intents: deterministic game blocks (BET only)
+    # - explanation/general intents: freeform LLM text with game header
+    if intent in ("explanation", "general"):
         freeform_text = _fetch_freeform(query, context)
+    elif intent in ("slate", "matchup"):
+        rationales = _fetch_rationales(
+            query, context, display_edges, include_pass=bool(teams),
+        )
 
     # Assemble response deterministically
     answer = build_structured_response(
@@ -293,6 +314,7 @@ def generate_response(state: AgentState) -> dict[str, Any]:
         tavily_results=tavily_results,
         errors=errors,
         freeform_text=freeform_text,
+        teams_mentioned=teams if teams else None,
     )
 
     # Build structured citations for the API response
@@ -336,13 +358,14 @@ def _build_llm_context(
 
 
 def _fetch_rationales(
-    query: str, context: str, edges: list[dict]
+    query: str, context: str, edges: list[dict], include_pass: bool = False,
 ) -> dict[str, str]:
     """Ask LLM for rationale text per game, return as dict keyed by game."""
     game_keys = [
         f"{e['away_team']} @ {e['home_team']}"
         for e in edges
-        if e.get("recommendation") != "NO_MARKET"
+        if e.get("recommendation") == "BET"
+        or (include_pass and e.get("recommendation") == "PASS")
     ]
     if not game_keys:
         return {}
@@ -371,7 +394,22 @@ def _fetch_rationales(
             if raw.endswith("```"):
                 raw = raw[:-3].strip()
         parsed = json.loads(raw)
-        return parsed.get("rationales", {})
+        raw_rationales = parsed.get("rationales", {})
+        # Convert array values to markdown bullet strings
+        converted = {
+            k: "\n".join(f"- {b}" for b in v) if isinstance(v, list) else v
+            for k, v in raw_rationales.items()
+        }
+        # If exact keys match, return directly
+        if any(k in converted for k in game_keys):
+            return converted
+        # Fallback: LLM may have used different key format — assign by order
+        logger.info("Rationale keys didn't match game keys, assigning by order")
+        values = list(converted.values())
+        return {
+            gk: values[i] if i < len(values) else ""
+            for i, gk in enumerate(game_keys)
+        }
     except Exception as exc:
         logger.warning("Rationale generation failed: %s", exc)
         return {k: "Analysis unavailable." for k in game_keys}
