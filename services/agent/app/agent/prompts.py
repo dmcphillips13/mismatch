@@ -27,14 +27,32 @@ RATIONALE_SYSTEM_PROMPT = """\
 You are Mismatch, an NHL betting assistant. You compare de-vigged sportsbook \
 fair probabilities to Kalshi market prices to find +EV opportunities.
 
-You will be given matchup edge data, historical context, and optionally recent news. \
-For each game listed, provide a brief rationale (1-2 sentences) explaining the \
-recommendation. Consider team form, historical matchups, injuries/news, and the edge.
+You will be given matchup edge data, retrieved historical context (head-to-head \
+records, team form summaries), and optionally recent news/injuries.
+
+For each game listed, write 2-3 bullet points as the rationale. Each bullet should \
+be a short, informal sentence. Rules:
+1. Use standard NHL abbreviations (e.g. PIT, VGK, SEA, VAN) in the bullet text.
+2. Reference specific head-to-head trends or team form data from the retrieved \
+context (e.g. "PIT has won both of their last two matchups against VGK").
+3. Focus on WHY a team might outperform expectations — recent form, H2H record, \
+home/away splits, injuries, rest advantages, etc.
+4. Keep each bullet to one sentence.
+
+NEVER mention odds, probabilities, percentages, Kalshi prices, fair values, or \
+edge numbers in the bullets. The user already sees those in the table above. \
+Only discuss real-world factors: trends, form, matchup history, injuries, rest.
+
+IMPORTANT: News/injury data from web searches may be outdated. Do NOT assert that \
+specific players are currently injured or out unless the data explicitly includes \
+today's date. Prefer historical trends and team form over speculative injury impacts.
 
 Respond ONLY with valid JSON:
-{"rationales": {"Away Team @ Home Team": "rationale text", ...}}
+{"rationales": {"Away Team @ Home Team": ["bullet one", "bullet two", "bullet three"], ...}}
 
-Use the exact game keys provided. Do not add extra keys.
+IMPORTANT: The JSON keys MUST be the exact full game keys provided (e.g. \
+"Vegas Golden Knights @ Pittsburgh Penguins"), NOT abbreviations. Only use \
+abbreviations inside the bullet text.
 """
 
 FREEFORM_SYSTEM_PROMPT = """\
@@ -67,6 +85,18 @@ def format_edges_for_prompt(edges: list[dict]) -> str:
             no_market.append(f"{away} @ {home}")
             continue
 
+        if rec == "NO_ODDS":
+            # Kalshi-only game (no Odds API data yet)
+            block = f"Game: {away} @ {home} ({date}) — Kalshi only (no odds data)\n"
+            kalshi_home = e.get("kalshi_home_prob")
+            kalshi_away = e.get("kalshi_away_prob")
+            if kalshi_away is not None:
+                block += f"  Away ({away}): kalshi={kalshi_away:.1%}\n"
+            if kalshi_home is not None:
+                block += f"  Home ({home}): kalshi={kalshi_home:.1%}\n"
+            lines.append(block)
+            continue
+
         home_fair = e.get("home_fair_prob")
         away_fair = e.get("away_fair_prob")
         kalshi_home = e.get("kalshi_home_prob")
@@ -74,7 +104,19 @@ def format_edges_for_prompt(edges: list[dict]) -> str:
         home_edge = e.get("home_edge")
         away_edge = e.get("away_edge")
 
-        block = f"Game: {away} @ {home} ({date}) — {rec}\n"
+        # Identify the +EV side explicitly
+        home_val = home_edge if home_edge is not None else float("-inf")
+        away_val = away_edge if away_edge is not None else float("-inf")
+        if away_val > home_val:
+            ev_team, ev_edge = away, away_edge
+        else:
+            ev_team, ev_edge = home, home_edge
+
+        block = f"Game: {away} @ {home} ({date}) — {rec}"
+        if rec == "BET" and ev_edge is not None:
+            block += f" on {ev_team} ({ev_edge:+.1%} edge)"
+        block += "\n"
+        block += f"  {ev_team} is UNDERVALUED by Kalshi.\n"
         if home_fair is not None:
             block += f"  Home ({home}): fair={home_fair:.1%}"
             if kalshi_home is not None:
