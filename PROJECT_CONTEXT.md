@@ -1,8 +1,8 @@
 # PROJECT_CONTEXT — Mismatch
 
 ## Current completed step
-- Step 9 complete (tools: Odds API, Kalshi, Tavily + odds math + matchup builder)
-- `/chat` endpoint is a skeleton — wired up in Step 10 (LangGraph agent)
+- Step 10 complete (LangGraph agent + strict schema output)
+- `/chat` endpoint wired to LangGraph StateGraph agent
 
 ## Current doc setup
 - Canonical spec: `AGENTS.md`
@@ -124,8 +124,29 @@ An explicit `timedelta(days=7)` filter would be dead code that never triggers.
 - Tavily: ready (search API)
 - Cohere: ready (rerank-v3.5, trial key with 10 req/min rate limit)
 
+## Step 10 implementation notes
+
+### LangGraph agent architecture
+- **Graph shape:** START -> interpret_intent -> retrieve -> fetch_odds_and_kalshi -> compute_edges -> [gate] -> tavily_search? -> generate_response -> END
+- **LLM calls:** 2 per request (intent classification + rationale/freeform generation) via gpt-4o-mini
+- **Tavily gating:** conditional edge — searches only if any edge has BET recommendation OR intent is "explanation" OR query contains explanation keywords
+- **Strict §8 formatting:** game blocks (Recommendation, Game, Kalshi Probability, Fair Probability, Edge, Rationale) are built deterministically in `format.py` from edge data. Only rationale text comes from LLM. Citations and disclaimer are always appended programmatically — never relies on LLM to produce the schema structure.
+- **Graceful degradation:** each node wraps external calls in try/except, appends to `errors` list, never crashes
+- **Serialization:** all tool results stored as `list[dict]` via `dataclasses.asdict()` for LangSmith tracing
+- **Qdrant payload indexes:** created for `metadata.team`, `metadata.teams`, `metadata.season_id`, `metadata.doc_type` to support filtered retrieval
+
+### Files created/modified
+- `app/tools/__init__.py` — package init
+- `app/agent/__init__.py` — package init
+- `app/agent/state.py` — AgentState TypedDict (13 fields)
+- `app/agent/prompts.py` — INTENT_SYSTEM_PROMPT, RATIONALE_SYSTEM_PROMPT, FREEFORM_SYSTEM_PROMPT, format helpers
+- `app/agent/format.py` — deterministic §8 response builder (build_game_block, build_structured_response, build_citations_block)
+- `app/agent/nodes.py` — 6 node functions + helpers (_build_llm_context, _fetch_rationales, _fetch_freeform, _build_citations)
+- `app/agent/graph.py` — build_graph() with StateGraph, conditional edge via gate_tavily
+- `app/main.py` — /chat wired to compiled graph
+
 ## Next step
-- Step 10: LangGraph agent + strict schema output
+- Step 11: LangSmith tracing + agent-level eval
 
 ## Weekend target
 - Complete Steps 8-12 and deploy.
