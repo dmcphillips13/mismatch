@@ -32,7 +32,7 @@ services:
       - key: KALSHI_PASSWORD
         sync: false
       - key: KALSHI_API_BASE_URL
-        value: https://trading-api.kalshi.com/trade-api/v2
+        value: https://api.elections.kalshi.com/trade-api/v2
       - key: TAVILY_API_KEY
         sync: false
       - key: TAVILY_API_BASE_URL
