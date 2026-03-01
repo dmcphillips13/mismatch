@@ -1,4 +1,4 @@
-"""Deterministic response formatter enforcing AGENTS.md §8 schema."""
+"""Deterministic response formatter for structured game block output."""
 
 from __future__ import annotations
 

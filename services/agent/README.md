@@ -1,6 +1,6 @@
-# Mismatch Agent Service (Step 3 Skeleton)
+# Mismatch Agent Service
 
-This directory contains the Python FastAPI backend skeleton for Mismatch.
+This directory contains the Python FastAPI backend for Mismatch.
 
 ## Install uv
 
@@ -27,5 +27,3 @@ uv run uvicorn app.main:app --reload --port 8000
 
 - `GET http://localhost:8000/health`
 - `POST http://localhost:8000/chat`
-
-Agent logic will be implemented in Step 8.

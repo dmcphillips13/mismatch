@@ -1,7 +1,7 @@
 """Cohere reranking layer using ContextualCompressionRetriever.
 
-Follows AIE9 Session 11 pattern: CohereRerank + ContextualCompressionRetriever
-wrapping a thin LangChain BaseRetriever adapter over QdrantRetrievalService.
+CohereRerank + ContextualCompressionRetriever wrapping a thin LangChain
+BaseRetriever adapter over QdrantRetrievalService.
 """
 
 from __future__ import annotations
