@@ -2,7 +2,7 @@ services:
   - type: web
     name: mismatch-agent
     runtime: python
-    repo: https://github.com/denismcphillips/mismatch
+    repo: https://github.com/dmcphillips13/mismatch
     rootDir: services/agent
     buildCommand: pip install uv && uv sync
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
