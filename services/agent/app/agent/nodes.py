@@ -66,12 +66,9 @@ def interpret_intent(state: AgentState) -> dict[str, Any]:
             ],
             temperature=0,
             max_tokens=200,
+            response_format={"type": "json_object"},
         )
         raw = resp.choices[0].message.content.strip()
-        if raw.startswith("```"):
-            raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
-            if raw.endswith("```"):
-                raw = raw[:-3].strip()
         parsed = json.loads(raw)
         intent = parsed.get("intent", "slate")
         teams_raw = parsed.get("teams", [])
@@ -517,13 +514,9 @@ def _fetch_rationales(
             ],
             temperature=0.3,
             max_tokens=2000,
+            response_format={"type": "json_object"},
         )
         raw = resp.choices[0].message.content.strip()
-        # Strip markdown code fences if present
-        if raw.startswith("```"):
-            raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
-            if raw.endswith("```"):
-                raw = raw[:-3].strip()
         parsed = json.loads(raw)
         raw_rationales = parsed.get("rationales", {})
         # Convert array values to markdown bullet strings
