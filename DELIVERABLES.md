@@ -1,4 +1,4 @@
-## Loom Video: [TODO]
+## Loom Video: https://www.loom.com/share/fac72d333707418fa727b946ba38b623
 
 ### Task 1: Articulate the problem and the user of your application
 1. Write a succinct 1-sentence description of the problem
