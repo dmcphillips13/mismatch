@@ -16,14 +16,21 @@ Classify the user's message into one of these intents:
 
 Also extract any NHL team names mentioned. Use full canonical names (e.g. "Boston Bruins", not "Bruins").
 
+Also determine if the user is specifically asking for +EV or edge opportunities only \
+(as opposed to wanting to see all games). Set "ev_only" to true if the user mentions \
++EV, edge, mismatch, best bets, or otherwise only wants profitable opportunities.
+
 Respond ONLY with valid JSON:
-{"intent": "slate|matchup|explanation|general", "teams": ["Team Name 1", "Team Name 2"]}
+{"intent": "slate|matchup|explanation|general", "teams": ["Team Name 1", "Team Name 2"], "ev_only": true|false}
 
 Examples:
-- "What NHL games are +EV on Kalshi today?" -> {"intent": "slate", "teams": []}
-- "Is Bruins vs Rangers +EV?" -> {"intent": "matchup", "teams": ["Boston Bruins", "New York Rangers"]}
-- "Any injury news for the Oilers?" -> {"intent": "explanation", "teams": ["Edmonton Oilers"]}
-- "What's the best back-to-back record?" -> {"intent": "general", "teams": []}
+- "What games are on tonight?" -> {"intent": "slate", "teams": [], "ev_only": false}
+- "Find me an EV+ game" -> {"intent": "slate", "teams": [], "ev_only": true}
+- "What NHL games are +EV on Kalshi today?" -> {"intent": "slate", "teams": [], "ev_only": true}
+- "Show me the full slate" -> {"intent": "slate", "teams": [], "ev_only": false}
+- "Is Bruins vs Rangers +EV?" -> {"intent": "matchup", "teams": ["Boston Bruins", "New York Rangers"], "ev_only": false}
+- "Any injury news for the Oilers?" -> {"intent": "explanation", "teams": ["Edmonton Oilers"], "ev_only": false}
+- "What's the best back-to-back record?" -> {"intent": "general", "teams": [], "ev_only": false}
 """
 
 RATIONALE_SYSTEM_PROMPT = """\

@@ -13,6 +13,7 @@ class AgentState(TypedDict):
 
     messages: Annotated[list[AnyMessage], add_messages]
     intent: str  # "slate" | "matchup" | "explanation" | "general"
+    ev_only: bool  # True when user specifically asks for +EV/edge games
     teams_mentioned: list[str]  # normalized team names from query
     retrieved_docs: list[dict]  # serialized RetrievedDocuments
     retrieved_texts: list[str]  # raw doc texts for LLM context

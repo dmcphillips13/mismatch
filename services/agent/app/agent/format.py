@@ -221,9 +221,24 @@ def build_citations_block(
     return "\n".join(lines)
 
 
-def _build_intro(bet_count: int, total_count: int, teams: list[str] | None = None) -> str:
+def _build_intro(
+    bet_count: int, total_count: int, teams: list[str] | None = None, ev_only: bool = False,
+) -> str:
     """Build a conversational intro sentence."""
     team_str = " and ".join(teams) if teams else None
+
+    if ev_only:
+        if bet_count == 0:
+            if team_str:
+                return f"I didn't find any +EV opportunities for the **{team_str}** right now."
+            return (
+                f"I looked at {total_count} upcoming game{'s' if total_count != 1 else ''} "
+                f"and didn't find any +EV opportunities right now."
+            )
+        return (
+            f"I found **{bet_count}** +EV opportunity{'s' if bet_count != 1 else ''} "
+            f"out of {total_count} upcoming game{'s' if total_count != 1 else ''}:"
+        )
 
     if total_count == 0:
         if team_str:
@@ -254,6 +269,7 @@ def build_structured_response(
     errors: list[str],
     freeform_text: str = "",
     teams_mentioned: list[str] | None = None,
+    ev_only: bool = False,
 ) -> str:
     """Assemble the full response with deterministic formatting.
 
@@ -338,11 +354,12 @@ def build_structured_response(
                 else:
                     parts.append(_build_game_header(e))
         else:
-            # Slate query — show all games, highlight +EV ones
+            # Slate query
             total_with_market = len(has_odds)
-            parts.append(_build_intro(len(bet_edges), total_with_market))
+            display = bet_edges if ev_only else has_odds
+            parts.append(_build_intro(len(bet_edges), total_with_market, ev_only=ev_only))
 
-            for e in has_odds:
+            for e in display:
                 game_key = f"{e['away_team']} @ {e['home_team']}"
                 if e.get("recommendation") == "BET":
                     rationale = rationales.get(game_key, "No analysis available.")
