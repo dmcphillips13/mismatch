@@ -71,12 +71,14 @@ def interpret_intent(state: AgentState) -> dict[str, Any]:
         raw = resp.choices[0].message.content.strip()
         parsed = json.loads(raw)
         intent = parsed.get("intent", "slate")
+        ev_only = parsed.get("ev_only", False)
         teams_raw = parsed.get("teams", [])
         teams = [normalize_team_name(t) for t in teams_raw]
     except Exception as exc:
         logger.warning("Intent classification failed: %s", exc)
         errors.append(f"Intent classification failed: {exc}")
         intent = "slate"
+        ev_only = False
         teams = []
 
     # Check for explanation keywords in query as fallback
@@ -86,6 +88,7 @@ def interpret_intent(state: AgentState) -> dict[str, Any]:
 
     return {
         "intent": intent,
+        "ev_only": ev_only,
         "teams_mentioned": teams,
         "errors": errors,
     }
@@ -428,8 +431,17 @@ def generate_response(state: AgentState) -> dict[str, Any]:
     elif intent in ("explanation", "general"):
         freeform_text = _fetch_freeform(query, context)
     elif intent in ("slate", "matchup"):
+        # Build focused context with only relevant edges for rationale generation
+        bet_relevant = [
+            e for e in display_edges
+            if e.get("recommendation") == "BET"
+            or (teams and e.get("recommendation") == "PASS")
+        ]
+        rationale_context = _build_llm_context(
+            retrieved_texts, bet_relevant, tavily_results, errors
+        )
         rationales = _fetch_rationales(
-            query, context, display_edges, include_pass=bool(teams),
+            query, rationale_context, display_edges, include_pass=bool(teams),
         )
 
     # Assemble response deterministically
@@ -443,6 +455,7 @@ def generate_response(state: AgentState) -> dict[str, Any]:
         errors=errors,
         freeform_text=freeform_text,
         teams_mentioned=teams if teams else None,
+        ev_only=state.get("ev_only", False),
     )
 
     # Build structured citations for the API response
@@ -485,10 +498,39 @@ def _build_llm_context(
     return "\n".join(parts)
 
 
+def _fetch_single_rationale(
+    client: OpenAI, game_key: str, context: str,
+) -> str:
+    """Fetch rationale bullets for a single game."""
+    prompt = (
+        f"{context}\n\n"
+        f"Provide rationale for this game: {game_key}"
+    )
+    resp = client.chat.completions.create(
+        model=settings.OPENAI_MODEL,
+        messages=[
+            {"role": "system", "content": RATIONALE_SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0.3,
+        max_tokens=500,
+        response_format={"type": "json_object"},
+    )
+    raw = resp.choices[0].message.content.strip()
+    parsed = json.loads(raw)
+    raw_rationales = parsed.get("rationales", {})
+    # Take the first (only) value regardless of key
+    for v in raw_rationales.values():
+        if isinstance(v, list):
+            return "\n".join(f"- {b}" for b in v)
+        return v
+    return ""
+
+
 def _fetch_rationales(
     query: str, context: str, edges: list[dict], include_pass: bool = False,
 ) -> dict[str, str]:
-    """Ask LLM for rationale text per game, return as dict keyed by game."""
+    """Ask LLM for rationale text per game, one call per game for reliability."""
     game_keys = [
         f"{e['away_team']} @ {e['home_team']}"
         for e in edges
@@ -498,45 +540,16 @@ def _fetch_rationales(
     if not game_keys:
         return {}
 
-    prompt = (
-        f"User query: {query}\n\n{context}\n\n"
-        f"Games to provide rationales for:\n"
-        + "\n".join(f"- {k}" for k in game_keys)
-    )
-
-    try:
-        client = _get_llm()
-        resp = client.chat.completions.create(
-            model=settings.OPENAI_MODEL,
-            messages=[
-                {"role": "system", "content": RATIONALE_SYSTEM_PROMPT},
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0.3,
-            max_tokens=2000,
-            response_format={"type": "json_object"},
-        )
-        raw = resp.choices[0].message.content.strip()
-        parsed = json.loads(raw)
-        raw_rationales = parsed.get("rationales", {})
-        # Convert array values to markdown bullet strings
-        converted = {
-            k: "\n".join(f"- {b}" for b in v) if isinstance(v, list) else v
-            for k, v in raw_rationales.items()
-        }
-        # If exact keys match, return directly
-        if any(k in converted for k in game_keys):
-            return converted
-        # Fallback: LLM may have used different key format — assign by order
-        logger.info("Rationale keys didn't match game keys, assigning by order")
-        values = list(converted.values())
-        return {
-            gk: values[i] if i < len(values) else ""
-            for i, gk in enumerate(game_keys)
-        }
-    except Exception as exc:
-        logger.warning("Rationale generation failed: %s", exc)
-        return {k: "Analysis unavailable." for k in game_keys}
+    client = _get_llm()
+    full_context = f"User query: {query}\n\n{context}"
+    result: dict[str, str] = {}
+    for gk in game_keys:
+        try:
+            result[gk] = _fetch_single_rationale(client, gk, full_context)
+        except Exception as exc:
+            logger.warning("Rationale failed for %s: %s", gk, exc)
+            result[gk] = ""
+    return result
 
 
 def _fetch_freeform(query: str, context: str) -> str:
